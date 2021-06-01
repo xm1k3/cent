@@ -10,6 +10,11 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 | keepfolders              | Keep folders (by default it only saves yaml files)        |
 | console             | Print console output                   |
 
+# Install
+```
+go get -u github.com/xm1k3/cent
+```
+
 # Usage
 
 ```
