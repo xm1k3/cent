@@ -60,3 +60,5 @@ community-templates:
 - [Alra3ees](https://twitter.com/Alra3ees)
 - [sec715](https://twitter.com/sec715)
 - [geeknik](https://twitter.com/geeknik)
+- [Nuclei](https://twitter.com/pdnuclei)
+- [Project Discovery](https://twitter.com/pdiscoveryio)
