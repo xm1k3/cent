@@ -1,33 +1,19 @@
 # cent
 Community edition nuclei templates, a simple tool that allows you to organize all the Nuclei templates offered by the community in one place
 
-# Supported commands
-
-| Command            | Description                  |
-|--------------------|------------------------------|
-| path                 | Path to save the templates   |
-| name               | Name of the main folder   |
-| keepfolders              | Keep folders (by default it only saves yaml files)        |
-| console             | Print console output                   |
-
 # Install
 ```
 go get -u github.com/xm1k3/cent
 ```
 
-# Usage
+# Supported commands
 
-```
-cent -h
-go run main.go -h
-```
-Example
-```
-▶ cent -p ~/ -n community-nuclei-templates -k
-▶ cent -p {YOUR PATH} -n community-nuclei-templates
-```
+| Command            | Description                  |
+|--------------------|------------------------------|
+| update                 | Update your repository   |
 
-### Root flags
+# Root flags
+
 ```
 Flags:
       --config string   config file (default is $HOME/.cent.yaml)
@@ -37,6 +23,27 @@ Flags:
   -n, --name string     Name of the main folder
   -p, --path string     Path to save the templates
 ```
+
+# Update flags
+```
+Flags:
+  -d, --directories   Remove unnecessary folders from updated $HOME/.cent.yaml
+  -f, --files         Remove unnecessary files from updated $HOME/.cent.yaml
+  -h, --help          help for update
+```
+
+# Usage
+
+```
+cent -h
+cent update -h
+```
+Example
+```
+▶ cent -p {YOUR PATH} -n community-nuclei-templates -k
+▶ cent update -d -f
+```
+
 
 ### Config
 You need to configure `cent` parameters in `$HOME/.cent.yaml`
