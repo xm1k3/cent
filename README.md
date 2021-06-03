@@ -67,6 +67,12 @@ community-templates:
   - https://github.com/ARPSyndicate/kenzer-templates.git
   - https://github.com/medbsq/ncl.git
   - https://github.com/foulenzer/foulenzer-templates.git
+  - https://github.com/im403/nuclei-temp
+  - https://github.com/System00-Security/backflow
+  - https://github.com/geeknik/nuclei-templates-1
+  - https://github.com/esetal/nuclei-bb-templates
+  - https://github.com/notnotnotveg/nuclei-custom-templates
+  - https://github.com/clarkvoss/Nuclei-Templates
 
 ```
 
@@ -79,3 +85,6 @@ community-templates:
 - [geeknik](https://twitter.com/geeknik)
 - [Nuclei](https://twitter.com/pdnuclei)
 - [Project Discovery](https://twitter.com/pdiscoveryio)
+- [SYSTEM00 SECURITY](https://github.com/System00-Security)
+- [clarkvoss][https://github.com/clarkvoss]
+- [notnotnotveg](https://github.com/notnotnotveg)
