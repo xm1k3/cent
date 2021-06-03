@@ -1,6 +1,7 @@
 package jobs
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
 	"github.com/spf13/viper"
 	"github.com/xm1k3/cent/internal/utils"
 )
@@ -69,6 +71,44 @@ func Start(_path string, name string, keepfolders bool, console bool) {
 		})
 
 	DeleteFromTmp(dirname)
+}
+
+func UpdateRepo(path string, remDirs bool, remFiles bool) {
+	filepath.Walk(path,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() {
+				if remDirs {
+					for _, exDirs := range viper.GetStringSlice("exclude-dirs") {
+						if strings.Contains(path, exDirs) {
+							err := os.RemoveAll(path)
+							if err != nil {
+								log.Fatal(err)
+							}
+							fmt.Println(color.RedString("[D][-] Dir  removed\t" + path))
+							return filepath.SkipDir
+						}
+					}
+				}
+			} else {
+				if remFiles {
+					for _, exFiles := range viper.GetStringSlice("exclude-files") {
+						// fmt.Println("Path: ", path, exFiles)
+						if strings.Contains(path, exFiles) {
+							e := os.Remove(path)
+							if e != nil {
+								log.Fatal(e)
+							}
+							fmt.Println(color.RedString("[F][-] File removed\t" + path))
+						}
+						// break
+					}
+				}
+			}
+			return nil
+		})
 }
 
 func getDirPath(path string) string {

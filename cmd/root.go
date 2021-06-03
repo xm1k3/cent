@@ -58,7 +58,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cent.yaml)")
 
-	rootCmd.Flags().StringP("path", "p", "", "Path to save the templates")
+	rootCmd.PersistentFlags().StringP("path", "p", "", "Path to save the templates")
 	rootCmd.Flags().StringP("name", "n", "", "Name of the main folder")
 	rootCmd.Flags().BoolP("keepfolders", "k", false, "Keep folders (by default it only saves yaml files)")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")

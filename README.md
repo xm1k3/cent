@@ -41,9 +41,11 @@ Flags:
 ### Config
 You need to configure `cent` parameters in `$HOME/.cent.yaml`
 ```yaml
+# Directories to exclude
 exclude-dirs:
   - .git
 
+# Files to exclude
 exclude-files:
   - README.md
   - .gitignore
@@ -60,6 +62,9 @@ community-templates:
   - https://github.com/foulenzer/foulenzer-templates.git
 
 ```
+
+## Want to help?
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/xm1k3)
 
 ## Credits
 - [Alra3ees](https://twitter.com/Alra3ees)
