@@ -32,11 +32,14 @@ var updateCmd = &cobra.Command{
 		path, _ := rootCmd.PersistentFlags().GetString("path")
 		directories, _ := cmd.Flags().GetBool("directories")
 		files, _ := cmd.Flags().GetBool("files")
-		if directories || files {
-			fmt.Println(directories, files, "Stonks")
-			jobs.UpdateRepo(path, directories, files)
+		if path != "" {
+			if directories || files {
+				jobs.UpdateRepo(path, directories, files)
+			} else {
+				fmt.Println(color.YellowString("[!] See avaiable flags"))
+			}
 		} else {
-			fmt.Println(color.YellowString("[!] See avaiable flags"))
+			fmt.Println(color.YellowString("[!] Set path flag"))
 		}
 	},
 }

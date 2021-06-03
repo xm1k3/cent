@@ -41,7 +41,7 @@ cent update -h
 Example
 ```
 ▶ cent -p {YOUR PATH} -n community-nuclei-templates -k
-▶ cent update -d -f
+▶ cent update -p {YOUR PATH} -d -f
 ```
 
 
