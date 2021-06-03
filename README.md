@@ -86,5 +86,5 @@ community-templates:
 - [Nuclei](https://twitter.com/pdnuclei)
 - [Project Discovery](https://twitter.com/pdiscoveryio)
 - [SYSTEM00 SECURITY](https://github.com/System00-Security)
-- [clarkvoss][https://github.com/clarkvoss]
+- [clarkvoss](https://github.com/clarkvoss)
 - [notnotnotveg](https://github.com/notnotnotveg)
