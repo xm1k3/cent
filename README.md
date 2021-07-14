@@ -1,9 +1,20 @@
-# cent
-Community edition nuclei templates, a simple tool that allows you to organize all the Nuclei templates offered by the community in one place
+<h1 align="center">
+  cent
+</h1>
+Community edition nuclei templates, a simple tool that allows you to organize all the Nuclei templates offered by the community in one place.
+
+<p align="center">
+<br>
+<a href="https://github.com/xm1k3/cent/issues"><img src="https://img.shields.io/badge/contributions-welcome-blue.svg?style=flat"></a>
+<img alt="AUR license badge" src="https://img.shields.io/badge/license-Apache-blue">
+<a href="https://github.com/xm1k3/cent/releases"><img src="https://img.shields.io/github/release/xm1k3/cent"></a>
+<br>
+<a href="https://twitter.com/xm1k3_"><img src="https://img.shields.io/twitter/follow/xm1k3_.svg?logo=twitter"></a>
+</p>
 
 # Install
 ```
-go get -u github.com/xm1k3/cent
+GO111MODULE=on go get -v github.com/xm1k3/cent
 ```
 
 # Supported commands
@@ -40,12 +51,27 @@ cent update -h
 ```
 Example
 ```
-▶ cent -p {YOUR PATH} -n community-nuclei-templates -k
-▶ cent update -p {YOUR PATH} -d -f
+cent -p {YOUR PATH} -n cent-nuclei-templates -k
+```
+Or
+```
+cent update -p {YOUR PATH} -d -f
 ```
 
+Once cent has been configured correctly you can perform a scan with Nuclei.
 
-### Config
+Example
+```
+nuclei -u https://example.com -t ./cent-nuclei-templates -tags cve
+```
+Or
+```
+nuclei -l urls.txt -t ./cent-nuclei-templates -tags cve
+```
+See [here](https://nuclei.projectdiscovery.io/nuclei/get-started/#running-nuclei) for more documentation about Nuclei
+
+
+# Config
 You need to configure `cent` parameters in `$HOME/.cent.yaml`
 ```yaml
 # Directories to exclude
@@ -61,22 +87,42 @@ exclude-files:
 
 # Add github urls
 community-templates:
-  - https://github.com/geeknik/the-nuclei-templates.git
-  - https://github.com/pikpikcu/nuclei-templates.git
-  - https://github.com/panch0r3d/nuclei-templates.git
-  - https://github.com/ARPSyndicate/kenzer-templates.git
-  - https://github.com/medbsq/ncl.git
-  - https://github.com/foulenzer/foulenzer-templates.git
+  - https://github.com/geeknik/the-nuclei-templates
+  - https://github.com/pikpikcu/nuclei-templates
+  - https://github.com/panch0r3d/nuclei-templates
+  - https://github.com/ARPSyndicate/kenzer-templates
+  - https://github.com/medbsq/ncl
+  - https://github.com/foulenzer/foulenzer-templates
   - https://github.com/im403/nuclei-temp
   - https://github.com/System00-Security/backflow
   - https://github.com/geeknik/nuclei-templates-1
   - https://github.com/esetal/nuclei-bb-templates
   - https://github.com/notnotnotveg/nuclei-custom-templates
   - https://github.com/clarkvoss/Nuclei-Templates
-
+  - https://github.com/z3bd/nuclei-templates
+  - https://github.com/joanbono/nuclei-templates
+  - https://github.com/peanuth8r/Nuclei_Templates
+  - https://github.com/thebrnwal/Content-Injection-Nuclei-Script
+  - https://github.com/ree4pwn/my-nuclei-templates
+  - https://github.com/optiv/mobile-nuclei-templates
+  - https://github.com/obreinx/nuceli-templates
+  - https://github.com/randomstr1ng/nuclei-sap-templates
+  - https://github.com/CharanRayudu/Custom-Nuclei-Templates
+  - https://github.com/zinminphyo0/KozinTemplates
+  - https://github.com/n1f2c3/mytemplates
+  - https://github.com/kabilan1290/templates
+  - https://github.com/smaranchand/nuclei-templates
+  - https://github.com/Saimonkabir/Nuclei-Templates
+  - https://github.com/yavolo/nuclei-templates
+  - https://github.com/sadnansakin/my-nuclei-templates
+  - https://github.com/5cr1pt/templates
+  - https://github.com/rahulkadavil/nuclei-templates
+  - https://github.com/Nithissh0708/Custom-Nuclei-Templates
+  - https://github.com/shifa123/detections
+  - https://github.com/shifa123/mytemplates
 ```
 
-## Want to help?
+# Want to help?
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/xm1k3)
 
 ## Credits
@@ -88,3 +134,6 @@ community-templates:
 - [SYSTEM00 SECURITY](https://github.com/System00-Security)
 - [clarkvoss](https://github.com/clarkvoss)
 - [notnotnotveg](https://github.com/notnotnotveg)
+
+# License
+Cent is distributed under Apache-2.0 License
