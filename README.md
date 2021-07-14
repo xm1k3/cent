@@ -127,6 +127,7 @@ community-templates:
 
 ## Credits
 - [Alra3ees](https://twitter.com/Alra3ees)
+  - [Nuclei-Templates-Collection](https://github.com/emadshanab/Nuclei-Templates-Collection)
 - [sec715](https://twitter.com/sec715)
 - [geeknik](https://twitter.com/geeknik)
 - [Nuclei](https://twitter.com/pdnuclei)
