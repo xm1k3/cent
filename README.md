@@ -14,7 +14,7 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 
 # Install
 ```
-GO111MODULE=on go get -v github.com/xm1k3/cent
+GO111MODULE=on go get -u github.com/xm1k3/cent
 ```
 
 # Supported commands
