@@ -1,14 +1,14 @@
-<h1 align="center">
-  cent
-</h1>
+![Cent](./static/img/Cent_banner.png)
+
 Community edition nuclei templates, a simple tool that allows you to organize all the Nuclei templates offered by the community in one place.
 
 <p align="center">
 <br>
-<a href="https://github.com/xm1k3/cent/issues"><img src="https://img.shields.io/badge/contributions-welcome-blue.svg?style=flat"></a>
-<img alt="AUR license badge" src="https://img.shields.io/badge/license-Apache-blue">
+<a href="https://github.com/xm1k3/cent/issues"><img src="https://img.shields.io/badge/contributions-welcome-success.svg?style=flat"></a>
+<img alt="Apache license badge" src="https://img.shields.io/badge/license-Apache-success">
 <a href="https://github.com/xm1k3/cent/releases"><img src="https://img.shields.io/github/release/xm1k3/cent"></a>
 <br>
+<a href="https://github.com/xm1k3/cent/stargazers"><img src="https://img.shields.io/github/stars/xm1k3/cent.svg?style=social&label=Stars"></a>
 <a href="https://twitter.com/xm1k3_"><img src="https://img.shields.io/twitter/follow/xm1k3_.svg?logo=twitter"></a>
 </p>
 
@@ -19,9 +19,10 @@ GO111MODULE=on go get -v github.com/xm1k3/cent
 
 # Supported commands
 
-| Command            | Description                  |
-|--------------------|------------------------------|
-| update                 | Update your repository   |
+| Command | Description            |
+| ------- | ---------------------- |
+| init    | Cent init project      |
+| update  | Update your repository |
 
 # Root flags
 
@@ -29,7 +30,6 @@ GO111MODULE=on go get -v github.com/xm1k3/cent
 Flags:
       --config string   config file (default is $HOME/.cent.yaml)
   -C, --console         Print console output
-  -h, --help            help for cent
   -k, --keepfolders     Keep folders (by default it only saves yaml files)
   -n, --name string     Name of the main folder
   -p, --path string     Path to save the templates
@@ -40,33 +40,34 @@ Flags:
 Flags:
   -d, --directories   Remove unnecessary folders from updated $HOME/.cent.yaml
   -f, --files         Remove unnecessary files from updated $HOME/.cent.yaml
-  -h, --help          help for update
+```
+
+# Init flags
+```
+Flags:
+  -f, --field string   field to retrieve, comma separated
+  -o, --overwrite      If the cent file exists overwrite it
+  -u, --url string     Config folder url
 ```
 
 # Usage
 
 ```
-cent -h
-cent update -h
+▶ cent -h
+▶ cent update -h
 ```
 Example
 ```
-cent -p {YOUR PATH} -n cent-nuclei-templates -k
-```
-Or
-```
-cent update -p {YOUR PATH} -d -f
+▶ cent -p {YOUR PATH} -n cent-nuclei-templates -k
+▶ cent update -p {YOUR PATH} -d -f
 ```
 
 Once cent has been configured correctly you can perform a scan with Nuclei.
 
 Example
 ```
-nuclei -u https://example.com -t ./cent-nuclei-templates -tags cve
-```
-Or
-```
-nuclei -l urls.txt -t ./cent-nuclei-templates -tags cve
+▶ nuclei -u https://example.com -t ./cent-nuclei-templates -tags cve
+▶ nuclei -l urls.txt -t ./cent-nuclei-templates -tags cve
 ```
 See [here](https://nuclei.projectdiscovery.io/nuclei/get-started/#running-nuclei) for more documentation about Nuclei
 
@@ -123,10 +124,10 @@ community-templates:
 ```
 
 # Want to help?
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/xm1k3)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/xm1k3)
 
 ## Credits
-- [Alra3ees](https://twitter.com/Alra3ees)
+- [Alra3ees - Emad Shanab](https://twitter.com/Alra3ees)
   - [Nuclei-Templates-Collection](https://github.com/emadshanab/Nuclei-Templates-Collection)
 - [sec715](https://twitter.com/sec715)
 - [geeknik](https://twitter.com/geeknik)
