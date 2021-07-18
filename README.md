@@ -16,6 +16,8 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 ```
 GO111MODULE=on go get -u github.com/xm1k3/cent
 ```
+after installation run `cent init` to initialize cent with the configuration files you find [here](https://github.com/xm1k3/cent/blob/main/.cent.yaml) 
+
 
 # Supported commands
 
