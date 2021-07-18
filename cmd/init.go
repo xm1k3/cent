@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -53,6 +54,7 @@ var initCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println("cent configured correctly, you can find the configuration file here: " + home + "/.cent.yaml")
 	},
 }
 
