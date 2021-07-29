@@ -48,7 +48,7 @@ By xm1k3`,
 		jobs.Start(pathFlag, keepfolders, console)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
-		fmt.Println(color.CyanString("cent v0.4 finished, you can find all your nuclei-templated in " + pathFlag))
+		fmt.Println(color.CyanString("cent v0.4 finished, you can find all your nuclei-templates in " + pathFlag))
 	},
 }
 
