@@ -28,8 +28,8 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "cent init project",
-	Long:  "cent init project",
+	Short: "Cent init configuration file",
+	Long:  "This command will automatically download .cent.yaml from repo and copy it to $HOME/.cent.yaml",
 	Run: func(cmd *cobra.Command, args []string) {
 		var fileUrl string
 		linkFlag, _ := cmd.Flags().GetString("url")
@@ -61,7 +61,6 @@ var initCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringP("url", "u", "", "Config folder url")
+	initCmd.Flags().StringP("url", "u", "", "Url from which you can download the configurations for .cent.yaml")
 	initCmd.Flags().BoolP("overwrite", "o", false, "If the cent file exists overwrite it")
-	initCmd.Flags().StringP("field", "f", "", "field to retrieve, comma separated")
 }

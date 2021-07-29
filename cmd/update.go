@@ -27,19 +27,19 @@ import (
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update your repository",
-	Long:  `This command helps you update your folder with templates by deleting unnecessary folders and files without having to do multiples git clone.`,
+	Long:  `This command helps you update your folder with templates by deleting unnecessary folders and files without having to do multiples git clones.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		path, _ := rootCmd.PersistentFlags().GetString("path")
+		path, _ := cmd.Flags().GetString("path")
 		directories, _ := cmd.Flags().GetBool("directories")
 		files, _ := cmd.Flags().GetBool("files")
 		if path != "" {
 			if directories || files {
-				jobs.UpdateRepo(path, directories, files)
+				jobs.UpdateRepo(path, directories, files, true)
 			} else {
-				fmt.Println(color.YellowString("[!] See avaiable flags"))
+				fmt.Println(color.YellowString("[!] directory or file flag required"))
 			}
 		} else {
-			fmt.Println(color.YellowString("[!] Set path flag"))
+			fmt.Println(color.YellowString("[!] Set folder path flag (example: $HOME/cent)"))
 		}
 	},
 }
@@ -47,7 +47,8 @@ var updateCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(updateCmd)
 
-	updateCmd.Flags().BoolP("directories", "d", false, "Remove unnecessary folders from updated $HOME/.cent.yaml")
-	updateCmd.Flags().BoolP("files", "f", false, "Remove unnecessary files from updated $HOME/.cent.yaml")
+	updateCmd.Flags().BoolP("directories", "d", false, "If true remove unnecessary folders from updated $HOME/.cent.yaml")
+	updateCmd.Flags().BoolP("files", "f", false, "If true remove unnecessary files from updated $HOME/.cent.yaml")
+	updateCmd.Flags().StringP("path", "p", "", "Path to folder with nuclei templates")
 
 }

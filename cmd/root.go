@@ -18,7 +18,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/xm1k3/cent/pkg/jobs"
 
@@ -37,13 +39,16 @@ to organize all the Nuclei templates offered by the community in one place.
 By xm1k3`,
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		path, _ := cmd.Flags().GetString("path")
-		name, _ := cmd.Flags().GetString("name")
+		pathFlag, _ := cmd.Flags().GetString("path")
+		//name, _ := cmd.Flags().GetString("name")
 		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
 
-		jobs.Start(path, name, keepfolders, console)
-		jobs.RemoveEmptyFolders(path + "/" + name)
+		fmt.Println(color.CyanString("cent v0.3 started"))
+		jobs.Start(pathFlag, keepfolders, console)
+		jobs.RemoveEmptyFolders(path.Join(pathFlag))
+		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
+		fmt.Println(color.CyanString("cent v0.3 finished, you can find all your nuclei-templated in " + pathFlag))
 	},
 }
 
@@ -58,12 +63,10 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cent.yaml)")
 
-	rootCmd.PersistentFlags().StringP("path", "p", "", "Path to save the templates")
-	rootCmd.Flags().StringP("name", "n", "", "Name of the main folder")
+	rootCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
 	rootCmd.Flags().BoolP("keepfolders", "k", false, "Keep folders (by default it only saves yaml files)")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
 
-	rootCmd.MarkFlagRequired("path")
 	rootCmd.MarkFlagRequired("name")
 }
 

@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"path/filepath"
+	filepath "path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -15,11 +15,17 @@ import (
 	"github.com/xm1k3/cent/internal/utils"
 )
 
-func Start(_path string, name string, keepfolders bool, console bool) {
+func Start(_path string, keepfolders bool, console bool) {
 	timestamp := time.Now().Unix()
+	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
+		os.Mkdir(filepath.Join(_path), 0700)
+	}
 
 	for index, gitPath := range viper.GetStringSlice("community-templates") {
 		utils.RunCommand("git clone "+gitPath+" /tmp/cent"+strconv.Itoa(int(timestamp))+"/repo"+strconv.Itoa(index), console)
+		if !console {
+			fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
+		}
 	}
 
 	dirname := "/tmp/cent" + strconv.Itoa(int(timestamp)) + "/"
@@ -31,40 +37,19 @@ func Start(_path string, name string, keepfolders bool, console bool) {
 			}
 			directory := getDirPath(strings.TrimPrefix(path, dirname))
 			if info.IsDir() {
-				for _, exDirs := range viper.GetStringSlice("exclude-dirs") {
-					if strings.Contains(path, exDirs) {
-						err := os.RemoveAll(path)
-						if err != nil {
-							log.Fatal(err)
-						}
-						return filepath.SkipDir
-					} else {
-
-						if keepfolders {
-							if _, err := os.Stat(_path + "/" + name + directory); os.IsNotExist(err) {
-								os.Mkdir(_path+"/"+name+directory, 0700)
-							}
-						}
-						break
+				if keepfolders {
+					if _, err := os.Stat(filepath.Join(_path, directory)); os.IsNotExist(err) {
+						// fmt.Println(_path, name, directory)
+						os.Mkdir(filepath.Join(_path, directory), 0700)
 					}
 				}
 			} else {
-				for _, exFiles := range viper.GetStringSlice("exclude-files") {
-					if strings.Contains(path, exFiles) {
-						e := os.Remove(path)
-						if e != nil {
-							log.Fatal(e)
-						}
-					} else {
-						basename := info.Name()
-						if filepath.Ext(basename) == ".yaml" {
-							if !keepfolders {
-								directory = ""
-							}
-							utils.RunCommand("cp "+path+" "+_path+"/"+name+directory, console)
-						}
+				basename := info.Name()
+				if filepath.Ext(basename) == ".yaml" {
+					if !keepfolders {
+						directory = ""
 					}
-					break
+					utils.RunCommand("cp "+path+" "+filepath.Join(_path, directory), console)
 				}
 			}
 			return nil
@@ -73,7 +58,7 @@ func Start(_path string, name string, keepfolders bool, console bool) {
 	DeleteFromTmp(dirname)
 }
 
-func UpdateRepo(path string, remDirs bool, remFiles bool) {
+func UpdateRepo(path string, remDirs bool, remFiles bool, printOut bool) {
 	filepath.Walk(path,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -87,7 +72,9 @@ func UpdateRepo(path string, remDirs bool, remFiles bool) {
 							if err != nil {
 								log.Fatal(err)
 							}
-							fmt.Println(color.RedString("[D][-] Dir  removed\t" + path))
+							if printOut {
+								fmt.Println(color.RedString("[D][-] Dir  removed\t" + path))
+							}
 							return filepath.SkipDir
 						}
 					}
@@ -101,7 +88,10 @@ func UpdateRepo(path string, remDirs bool, remFiles bool) {
 							if e != nil {
 								log.Fatal(e)
 							}
-							fmt.Println(color.RedString("[F][-] File removed\t" + path))
+							if printOut {
+								fmt.Println(color.RedString("[F][-] File removed\t" + path))
+							}
+
 						}
 						// break
 					}
@@ -131,8 +121,8 @@ func RemoveEmptyFolders(dirname string) {
 
 	for _, file := range files {
 		if file.IsDir() {
-			if IsEmpty(dirname + "/" + file.Name()) {
-				err := os.RemoveAll(dirname + "/" + file.Name())
+			if IsEmpty(filepath.Join(dirname, file.Name())) {
+				err := os.RemoveAll(filepath.Join(dirname, file.Name()))
 				if err != nil {
 					log.Fatal(err)
 				}

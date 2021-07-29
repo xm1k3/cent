@@ -10,6 +10,10 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 <br>
 <a href="https://github.com/xm1k3/cent/stargazers"><img src="https://img.shields.io/github/stars/xm1k3/cent.svg?style=social&label=Stars"></a>
 <a href="https://twitter.com/xm1k3_"><img src="https://img.shields.io/twitter/follow/xm1k3_.svg?logo=twitter"></a>
+<br>
+<br>
+<br>
+<a href="https://www.buymeacoffee.com/xm1k3"><img src="https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png"></a>
 </p>
 
 # Install
@@ -33,37 +37,55 @@ Flags:
       --config string   config file (default is $HOME/.cent.yaml)
   -C, --console         Print console output
   -k, --keepfolders     Keep folders (by default it only saves yaml files)
-  -n, --name string     Name of the main folder
-  -p, --path string     Path to save the templates
+  -p, --path string     Root path to save the templates (default "./")
 ```
 
 # Update flags
+This command helps you update your folder with templates by deleting unnecessary folders and files without having to do multiples git clones.
 ```
 Flags:
-  -d, --directories   Remove unnecessary folders from updated $HOME/.cent.yaml
-  -f, --files         Remove unnecessary files from updated $HOME/.cent.yaml
+  -d, --directories   If true remove unnecessary folders from updated $HOME/.cent.yaml
+  -f, --files         If true remove unnecessary files from updated $HOME/.cent.yaml
+  -p, --path string   Path to folder with nuclei templates
 ```
 
 # Init flags
+This command will automatically download [`.cent.yaml`](https://raw.githubusercontent.com/xm1k3/cent/main/.cent.yaml) from repo and copy it to `$HOME/.cent.yaml`
 ```
 Flags:
-  -f, --field string   field to retrieve, comma separated
-  -o, --overwrite      If the cent file exists overwrite it
-  -u, --url string     Config folder url
+  -h, --help         help for init
+  -o, --overwrite    If the cent file exists overwrite it
+  -u, --url string   Url from which you can download the configurations for .cent.yaml
 ```
 
 # Usage
 
 ```
 ▶ cent -h
+▶ cent init -h
 ▶ cent update -h
 ```
-Example
+Example:
+
+Clone and insert all the community templates into the `cent-nuclei-templates` folder 
 ```
-▶ cent -p {YOUR PATH} -n cent-nuclei-templates -k
-▶ cent update -p {YOUR PATH} -d -f
+▶ cent -p cent-nuclei-templates -k
 ```
 
+If you have updated the `cent.yaml` file by adding new folders
+```yaml
+exclude-dirs:
+  - ...
+  - files
+  - ...
+```
+just do:
+```
+▶ cent update -p cent-nuclei-templates -d
+```
+and `cent` will automatically delete all `files` folder present in `cent-nuclei-templates` without cloning all the github repos.
+
+---
 Once cent has been configured correctly you can perform a scan with Nuclei.
 
 Example
@@ -125,9 +147,6 @@ community-templates:
   - https://github.com/shifa123/mytemplates
   - https://github.com/daffainfo/my-nuclei-templates
 ```
-
-# Want to help?
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/xm1k3)
 
 ## Credits
 - [Alra3ees - Emad Shanab](https://twitter.com/Alra3ees)
