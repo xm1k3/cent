@@ -76,15 +76,19 @@ If you have updated the `cent.yaml` file by adding new folders
 ```yaml
 exclude-dirs:
   - ...
-  - files
+  - dns
   - ...
 ```
 just do:
 ```
 ▶ cent update -p cent-nuclei-templates -d
 ```
-and `cent` will automatically delete all `files` folder present in `cent-nuclei-templates` without cloning all the github repos.
+and `cent` will automatically delete all `dns` folder present in `cent-nuclei-templates` without cloning all the github repos.
 
+Same thing with `exclude-files`
+```
+▶ cent update -p cent-nuclei-templates -f
+```
 ---
 Once cent has been configured correctly you can perform a scan with Nuclei.
 
