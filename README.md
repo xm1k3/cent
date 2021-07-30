@@ -71,6 +71,7 @@ Clone and insert all the community templates into the `cent-nuclei-templates` fo
 ```
 ▶ cent -p cent-nuclei-templates -k
 ```
+![cent](./static/img/cent-v0.4.png)
 
 If you have updated the `cent.yaml` file by adding new folders
 ```yaml
@@ -84,6 +85,8 @@ just do:
 ▶ cent update -p cent-nuclei-templates -d
 ```
 and `cent` will automatically delete all `dns` folder present in `cent-nuclei-templates` without cloning all the github repos.
+
+![cent update](./static/img/cent-v0.4-update.png)
 
 Same thing with `exclude-files`
 ```
@@ -112,7 +115,7 @@ exclude-files:
   - README.md
   - .gitignore
   - .pre-commit-config.yaml
-  
+
 # Add github urls
 community-templates:
   - https://github.com/geeknik/the-nuclei-templates
@@ -147,7 +150,6 @@ community-templates:
   - https://github.com/rahulkadavil/nuclei-templates
   - https://github.com/Nithissh0708/Custom-Nuclei-Templates
   - https://github.com/shifa123/detections
-  - https://github.com/shifa123/mytemplates
   - https://github.com/daffainfo/my-nuclei-templates
 ```
 
