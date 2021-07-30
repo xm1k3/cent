@@ -27,7 +27,7 @@ after installation run `cent init` to initialize cent with the configuration fil
 
 | Command | Description            |
 | ------- | ---------------------- |
-| init    | Cent init project      |
+| init    | Cent init configuration file      |
 | update  | Update your repository |
 
 # Root flags
@@ -112,8 +112,7 @@ exclude-files:
   - README.md
   - .gitignore
   - .pre-commit-config.yaml
-  - LICENCE
-
+  
 # Add github urls
 community-templates:
   - https://github.com/geeknik/the-nuclei-templates

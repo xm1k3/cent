@@ -7,7 +7,6 @@ exclude-files:
   - README.md
   - .gitignore
   - .pre-commit-config.yaml
-  - LICENCE
 
 # Add github urls
 community-templates:
