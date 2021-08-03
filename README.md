@@ -20,6 +20,10 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 ```
 GO111MODULE=on go get -u github.com/xm1k3/cent
 ```
+
+Or [download from releases](https://github.com/xm1k3/cent/releases)
+<br><br>
+
 after installation run `cent init` to initialize cent with the configuration files you find [here](https://github.com/xm1k3/cent/blob/main/.cent.yaml) 
 
 
@@ -29,6 +33,7 @@ after installation run `cent init` to initialize cent with the configuration fil
 | ------- | ---------------------- |
 | init    | Cent init configuration file      |
 | update  | Update your repository |
+| version  | Print cent version |
 
 # Root flags
 
@@ -64,6 +69,7 @@ Flags:
 ▶ cent -h
 ▶ cent init -h
 ▶ cent update -h
+▶ cent version
 ```
 Example:
 
@@ -71,7 +77,7 @@ Clone and insert all the community templates into the `cent-nuclei-templates` fo
 ```
 ▶ cent -p cent-nuclei-templates -k
 ```
-![cent](./static/img/cent-v0.4.png)
+![cent](./static/img/cent-v1.0.png)
 
 If you have updated the `cent.yaml` file by adding new folders
 ```yaml
@@ -86,7 +92,7 @@ just do:
 ```
 and `cent` will automatically delete all `dns` folder present in `cent-nuclei-templates` without cloning all the github repos.
 
-![cent update](./static/img/cent-v0.4-update.png)
+![cent update](./static/img/cent-update.png)
 
 Same thing with `exclude-files`
 ```
@@ -154,15 +160,15 @@ community-templates:
 ```
 
 ## Credits
-- [Alra3ees - Emad Shanab](https://twitter.com/Alra3ees)
-  - [Nuclei-Templates-Collection](https://github.com/emadshanab/Nuclei-Templates-Collection)
-- [sec715](https://twitter.com/sec715)
-- [geeknik](https://twitter.com/geeknik)
 - [Nuclei](https://twitter.com/pdnuclei)
 - [Project Discovery](https://twitter.com/pdiscoveryio)
+- [sec715](https://twitter.com/sec715)
+- [geeknik](https://twitter.com/geeknik)
 - [SYSTEM00 SECURITY](https://github.com/System00-Security)
 - [clarkvoss](https://github.com/clarkvoss)
 - [notnotnotveg](https://github.com/notnotnotveg)
+- [Alra3ees - Emad Shanab](https://twitter.com/Alra3ees)
+  - [Nuclei-Templates-Collection](https://github.com/emadshanab/Nuclei-Templates-Collection)
 
 # License
 Cent is distributed under Apache-2.0 License

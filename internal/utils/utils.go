@@ -2,11 +2,12 @@ package utils
 
 import (
 	"bytes"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func RunCommand(command string, background bool) {
@@ -22,8 +23,8 @@ func RunCommand(command string, background bool) {
 	}
 	err := cmd.Run()
 	if err != nil {
-		if background {
-			fmt.Println("Error running shell command: ", command, "  => ", err.Error())
+		if strings.Contains(command, "fdupes") {
+			log.Fatalln("Error running shell command: ", command, "  => ", err.Error(), "\nInstall with: sudo apt-get install fdupes")
 		}
 	}
 }

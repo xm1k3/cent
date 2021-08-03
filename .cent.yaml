@@ -7,9 +7,11 @@ exclude-files:
   - README.md
   - .gitignore
   - .pre-commit-config.yaml
+  - LICENSE
 
 # Add github urls
 community-templates:
+  - https://github.com/projectdiscovery/nuclei-templates.git
   - https://github.com/geeknik/the-nuclei-templates
   - https://github.com/pikpikcu/nuclei-templates
   - https://github.com/panch0r3d/nuclei-templates
@@ -40,6 +42,5 @@ community-templates:
   - https://github.com/sadnansakin/my-nuclei-templates
   - https://github.com/5cr1pt/templates
   - https://github.com/rahulkadavil/nuclei-templates
-  - https://github.com/Nithissh0708/Custom-Nuclei-Templates
   - https://github.com/shifa123/detections
   - https://github.com/daffainfo/my-nuclei-templates

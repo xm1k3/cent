@@ -101,6 +101,10 @@ func UpdateRepo(path string, remDirs bool, remFiles bool, printOut bool) {
 		})
 }
 
+func RemoveDuplicates(path string, console bool) {
+	utils.RunCommand("fdupes -d -N -r "+path, console)
+}
+
 func getDirPath(path string) string {
 	reponame := strings.Split(path, "/")[0]
 	endpoint := strings.TrimPrefix(path, reponame)

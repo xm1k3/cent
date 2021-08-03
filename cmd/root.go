@@ -44,11 +44,14 @@ By xm1k3`,
 		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
 
-		fmt.Println(color.CyanString("cent v0.4 started"))
+		fmt.Println(color.CyanString("cent started"))
 		jobs.Start(pathFlag, keepfolders, console)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
-		fmt.Println(color.CyanString("cent v0.4 finished, you can find all your nuclei-templates in " + pathFlag))
+		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
+		jobs.RemoveDuplicates(path.Join(pathFlag), console)
+		fmt.Println(color.YellowString("[!] Removed duplicates"))
+		fmt.Println(color.CyanString("cent finished, you can find all your nuclei-templates in " + pathFlag))
 	},
 }
 
