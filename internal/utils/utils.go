@@ -25,6 +25,9 @@ func RunCommand(command string, background bool) {
 	if err != nil {
 		if strings.Contains(command, "fdupes") {
 			log.Fatalln("Error running shell command: ", command, "  => ", err.Error(), "\nInstall with: sudo apt-get install fdupes")
+		} else {
+			log.Fatalln("Error running shell command: ", command, "  => ", err.Error())
+
 		}
 	}
 }
