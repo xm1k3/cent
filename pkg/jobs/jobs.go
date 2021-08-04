@@ -1,13 +1,16 @@
 package jobs
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"os"
 	filepath "path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fatih/color"
@@ -15,20 +18,43 @@ import (
 	"github.com/xm1k3/cent/internal/utils"
 )
 
-func Start(_path string, keepfolders bool, console bool) {
-	timestamp := time.Now().Unix()
+func cloneRepo(gitPath string, console bool, index string, timestamp string) {
+	utils.RunCommand("git clone "+gitPath+" /tmp/cent"+timestamp+"/repo"+index, console)
+	if !console {
+		fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
+	}
+}
+
+func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string) {
+	defer wg.Done()
+	for repo := range work {
+		cloneRepo(repo[1], console, repo[0], timestamp)
+	}
+}
+
+func Start(_path string, keepfolders bool, console bool, threads int) {
+	timestamp := strconv.Itoa(int(time.Now().Unix()))
 	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(_path), 0700)
 	}
 
-	for index, gitPath := range viper.GetStringSlice("community-templates") {
-		utils.RunCommand("git clone "+gitPath+" /tmp/cent"+strconv.Itoa(int(timestamp))+"/repo"+strconv.Itoa(index), console)
-		if !console {
-			fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
+	work := make(chan [2]string)
+	go func() {
+		for index, gitPath := range viper.GetStringSlice("community-templates") {
+			work <- [2]string{strconv.Itoa(index), gitPath}
 		}
-	}
+		close(work)
+	}()
 
-	dirname := "/tmp/cent" + strconv.Itoa(int(timestamp)) + "/"
+	wg := &sync.WaitGroup{}
+
+	for i := 0; i < threads; i++ {
+		wg.Add(1)
+		go worker(work, wg, console, timestamp)
+	}
+	wg.Wait()
+
+	dirname := "/tmp/cent" + timestamp + "/"
 
 	filepath.Walk(dirname,
 		func(path string, info os.FileInfo, err error) error {
@@ -102,7 +128,62 @@ func UpdateRepo(path string, remDirs bool, remFiles bool, printOut bool) {
 }
 
 func RemoveDuplicates(path string, console bool) {
-	utils.RunCommand("fdupes -d -N -r "+path, console)
+	fmt.Println("Removing duplicate templates...")
+	files := getFilePaths(path)
+	hashes := make(map[string]string)
+
+	// get file hashes
+	for _, file := range files {
+		hashes[file] = getFileHash(file)
+	}
+
+	// get hash files
+	hashfiles := make(map[string][]string)
+	for file, hash := range hashes {
+		hashfiles[hash] = append(hashfiles[hash], file)
+	}
+
+	// for each hash, remove all the files except the first one
+	for _, files := range hashfiles {
+		for _, fileToRemove := range files[1:] {
+			fmt.Printf("Removing duplicate file: %s\n", fileToRemove)
+			os.Remove(fileToRemove)
+		}
+	}
+}
+
+func getFilePaths(path string) []string {
+	var files []string
+
+	// go through each file
+	err := filepath.WalkDir(".", func(s string, d fs.DirEntry, e error) error {
+		if e != nil {
+			return e
+		}
+		if !d.IsDir() {
+			files = append(files, s)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return files
+}
+
+func getFileHash(path string) string {
+	f, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		log.Fatal(err)
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func getDirPath(path string) string {
