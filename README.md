@@ -42,7 +42,8 @@ Flags:
       --config string   config file (default is $HOME/.cent.yaml)
   -C, --console         Print console output
   -k, --keepfolders     Keep folders (by default it only saves yaml files)
-  -p, --path string     Root path to save the templates (default "./")
+  -p, --path string     Root path to save the templates (default "cent-nuclei-templates")
+  -t, --threads int     Number of threads to use when cloning repositories (default 10)
 ```
 
 # Update flags
