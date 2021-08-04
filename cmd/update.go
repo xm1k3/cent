@@ -17,8 +17,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path"
 
 	"github.com/fatih/color"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/xm1k3/cent/pkg/jobs"
 )
@@ -29,12 +33,25 @@ var updateCmd = &cobra.Command{
 	Short: "Update your repository",
 	Long:  `This command helps you update your folder with templates by deleting unnecessary folders and files without having to do multiples git clones.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		path, _ := cmd.Flags().GetString("path")
+		pathFlag, _ := cmd.Flags().GetString("path")
 		directories, _ := cmd.Flags().GetBool("directories")
 		files, _ := cmd.Flags().GetBool("files")
-		if path != "" {
+
+		home, err := homedir.Dir()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if _, err := os.Stat(path.Join(home, ".cent.yaml")); os.IsNotExist(err) {
+			fmt.Println(`Run ` + color.YellowString("cent init") + ` to automatically download ` +
+				color.HiCyanString(".cent.yaml") + ` from repo and copy it to ` +
+				color.HiCyanString("$HOME/.cent.yaml"))
+			return
+		}
+
+		if pathFlag != "" {
 			if directories || files {
-				jobs.UpdateRepo(path, directories, files, true)
+				jobs.UpdateRepo(pathFlag, directories, files, true)
 			} else {
 				fmt.Println(color.YellowString("[!] directory or file flag required"))
 			}

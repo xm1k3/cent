@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path"
 
@@ -43,6 +44,18 @@ By xm1k3`,
 		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
+
+		home, err := homedir.Dir()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if _, err := os.Stat(path.Join(home, ".cent.yaml")); os.IsNotExist(err) {
+			fmt.Println(`Run ` + color.YellowString("cent init") + ` to automatically download ` +
+				color.HiCyanString(".cent.yaml") + ` from repo and copy it to ` +
+				color.HiCyanString("$HOME/.cent.yaml"))
+			return
+		}
 
 		fmt.Println(color.CyanString("cent started"))
 		jobs.Start(pathFlag, keepfolders, console, threads)
