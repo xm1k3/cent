@@ -161,6 +161,7 @@ community-templates:
 ```
 
 ## Credits
+- [hakluke](https://twitter.com/hakluke)
 - [Nuclei](https://twitter.com/pdnuclei)
 - [Project Discovery](https://twitter.com/pdiscoveryio)
 - [sec715](https://twitter.com/sec715)
