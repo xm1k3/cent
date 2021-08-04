@@ -1,6 +1,6 @@
 # Directories to exclude
 exclude-dirs:
-  - .git
+  - SOMETHING
 
 # Files to exclude
 exclude-files:

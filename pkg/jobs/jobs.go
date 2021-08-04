@@ -146,7 +146,9 @@ func RemoveDuplicates(path string, console bool) {
 	// for each hash, remove all the files except the first one
 	for _, files := range hashfiles {
 		for _, fileToRemove := range files[1:] {
-			fmt.Printf("Removing duplicate file: %s\n", fileToRemove)
+			if console {
+				fmt.Printf("Removing duplicate file: %s\n", fileToRemove)
+			}
 			os.Remove(fileToRemove)
 		}
 	}
