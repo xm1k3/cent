@@ -1,8 +1,10 @@
 package jobs
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"os"
 	filepath "path/filepath"
@@ -126,7 +128,62 @@ func UpdateRepo(path string, remDirs bool, remFiles bool, printOut bool) {
 }
 
 func RemoveDuplicates(path string, console bool) {
-	utils.RunCommand("fdupes -d -N -r "+path, console)
+	fmt.Println("Removing duplicate templates...")
+	files := getFilePaths(path)
+	hashes := make(map[string]string)
+
+	// get file hashes
+	for _, file := range files {
+		hashes[file] = getFileHash(file)
+	}
+
+	// get hash files
+	hashfiles := make(map[string][]string)
+	for file, hash := range hashes {
+		hashfiles[hash] = append(hashfiles[hash], file)
+	}
+
+	// for each hash, remove all the files except the first one
+	for _, files := range hashfiles {
+		for _, fileToRemove := range files[1:] {
+			fmt.Printf("Removing duplicate file: %s\n", fileToRemove)
+			os.Remove(fileToRemove)
+		}
+	}
+}
+
+func getFilePaths(path string) []string {
+	var files []string
+
+	// go through each file
+	err := filepath.WalkDir(".", func(s string, d fs.DirEntry, e error) error {
+		if e != nil {
+			return e
+		}
+		if !d.IsDir() {
+			files = append(files, s)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return files
+}
+
+func getFileHash(path string) string {
+	f, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		log.Fatal(err)
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func getDirPath(path string) string {
