@@ -115,7 +115,7 @@ You need to configure `cent` parameters in `$HOME/.cent.yaml`
 ```yaml
 # Directories to exclude
 exclude-dirs:
-  - .git
+  - SOMETHING
 
 # Files to exclude
 exclude-files:

@@ -40,7 +40,6 @@ By xm1k3`,
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		pathFlag, _ := cmd.Flags().GetString("path")
-		//name, _ := cmd.Flags().GetString("name")
 		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
@@ -48,7 +47,6 @@ By xm1k3`,
 		fmt.Println(color.CyanString("cent started"))
 		jobs.Start(pathFlag, keepfolders, console, threads)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
-		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
 		jobs.RemoveDuplicates(path.Join(pathFlag), console)
 		fmt.Println(color.YellowString("[!] Removed duplicates"))
