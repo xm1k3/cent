@@ -8,6 +8,7 @@ import (
 	filepath "path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fatih/color"
@@ -15,20 +16,43 @@ import (
 	"github.com/xm1k3/cent/internal/utils"
 )
 
-func Start(_path string, keepfolders bool, console bool) {
-	timestamp := time.Now().Unix()
+func cloneRepo(gitPath string, console bool, index string, timestamp string) {
+	utils.RunCommand("git clone "+gitPath+" /tmp/cent"+timestamp+"/repo"+index, console)
+	if !console {
+		fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
+	}
+}
+
+func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string) {
+	defer wg.Done()
+	for repo := range work {
+		cloneRepo(repo[1], console, repo[0], timestamp)
+	}
+}
+
+func Start(_path string, keepfolders bool, console bool, threads int) {
+	timestamp := strconv.Itoa(int(time.Now().Unix()))
 	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(_path), 0700)
 	}
 
-	for index, gitPath := range viper.GetStringSlice("community-templates") {
-		utils.RunCommand("git clone "+gitPath+" /tmp/cent"+strconv.Itoa(int(timestamp))+"/repo"+strconv.Itoa(index), console)
-		if !console {
-			fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
+	work := make(chan [2]string)
+	go func() {
+		for index, gitPath := range viper.GetStringSlice("community-templates") {
+			work <- [2]string{strconv.Itoa(index), gitPath}
 		}
-	}
+		close(work)
+	}()
 
-	dirname := "/tmp/cent" + strconv.Itoa(int(timestamp)) + "/"
+	wg := &sync.WaitGroup{}
+
+	for i := 0; i < threads; i++ {
+		wg.Add(1)
+		go worker(work, wg, console, timestamp)
+	}
+	wg.Wait()
+
+	dirname := "/tmp/cent" + timestamp + "/"
 
 	filepath.Walk(dirname,
 		func(path string, info os.FileInfo, err error) error {

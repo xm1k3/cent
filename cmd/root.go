@@ -43,9 +43,10 @@ By xm1k3`,
 		//name, _ := cmd.Flags().GetString("name")
 		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
+		threads, _ := cmd.Flags().GetInt("threads")
 
 		fmt.Println(color.CyanString("cent started"))
-		jobs.Start(pathFlag, keepfolders, console)
+		jobs.Start(pathFlag, keepfolders, console, threads)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
@@ -69,6 +70,7 @@ func init() {
 	rootCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
 	rootCmd.Flags().BoolP("keepfolders", "k", false, "Keep folders (by default it only saves yaml files)")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
+	rootCmd.Flags().IntP("threads", "t", 10, "Number of threads to use when cloning repositories")
 
 	rootCmd.MarkFlagRequired("name")
 }
