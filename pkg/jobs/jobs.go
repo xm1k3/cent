@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	filepath "path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -145,6 +146,7 @@ func RemoveDuplicates(path string, console bool) {
 
 	// for each hash, remove all the files except the first one
 	for _, files := range hashfiles {
+		sort.Strings(files)
 		for _, fileToRemove := range files[1:] {
 			if console {
 				fmt.Printf("Removing duplicate file: %s\n", fileToRemove)
