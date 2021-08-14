@@ -158,7 +158,7 @@ func getFilePaths(path string) []string {
 	var files []string
 
 	// go through each file
-	err := filepath.WalkDir(".", func(s string, d fs.DirEntry, e error) error {
+	err := filepath.WalkDir(path, func(s string, d fs.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
