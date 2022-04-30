@@ -12,8 +12,6 @@ exclude-files:
 # Add github urls
 community-templates:
   - https://github.com/projectdiscovery/nuclei-templates.git
-  - https://gist.github.com/0x240x23elu
-  - https://gist.github.com/ResistanceIsUseless/e46848f67706a8aa1205c9d2866bff31
   - https://github.com/0x727/ObserverWard_0x727
   - https://github.com/1in9e/my-nuclei-templates
   - https://github.com/5cr1pt/templates
