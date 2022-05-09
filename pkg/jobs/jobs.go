@@ -76,7 +76,7 @@ func Start(_path string, keepfolders bool, console bool, threads int) {
 					if !keepfolders {
 						directory = ""
 					}
-					utils.RunCommand("cp "+path+" "+filepath.Join(_path, directory), console)
+					utils.RunCommand("cp '"+path+"' '"+filepath.Join(_path, directory)+"'", console)
 				}
 			}
 			return nil
