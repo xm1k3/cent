@@ -44,6 +44,7 @@ By xm1k3`,
 		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
+		timeout, _ := cmd.Flags().GetInt("timeout")
 
 		home, err := homedir.Dir()
 		if err != nil {
@@ -58,7 +59,7 @@ By xm1k3`,
 		}
 
 		fmt.Println(color.CyanString("cent started"))
-		jobs.Start(pathFlag, keepfolders, console, threads)
+		jobs.Start(pathFlag, keepfolders, console, threads, timeout)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
 		jobs.RemoveDuplicates(path.Join(pathFlag), console)
@@ -82,6 +83,7 @@ func init() {
 	rootCmd.Flags().BoolP("keepfolders", "k", false, "Keep folders (by default it only saves yaml files)")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
 	rootCmd.Flags().IntP("threads", "t", 10, "Number of threads to use when cloning repositories")
+	rootCmd.Flags().IntP("timeout", "T", 2, "timeout in seconds")
 
 	rootCmd.MarkFlagRequired("name")
 }

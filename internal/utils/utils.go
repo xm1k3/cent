@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func RunCommand(command string, background bool) {
+func RunCommand(command string, background bool, defaultTimeout int) {
 	cmd := exec.Command("bash", "-c", command)
 
 	cmd.Start()
@@ -20,7 +20,7 @@ func RunCommand(command string, background bool) {
 	go func() { done <- cmd.Wait() }()
 
 	// Start a timer
-	timeout := time.After(1 * time.Minute)
+	timeout := time.After(time.Duration(defaultTimeout) * time.Second)
 
 	select {
 	case <-timeout:

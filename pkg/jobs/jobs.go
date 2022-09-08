@@ -19,21 +19,21 @@ import (
 	"github.com/xm1k3/cent/internal/utils"
 )
 
-func cloneRepo(gitPath string, console bool, index string, timestamp string) {
-	utils.RunCommand("git clone "+gitPath+" /tmp/cent"+timestamp+"/repo"+index, console)
+func cloneRepo(gitPath string, console bool, index string, timestamp string, defaultTimeout int) {
+	utils.RunCommand("git clone "+gitPath+" /tmp/cent"+timestamp+"/repo"+index, console, defaultTimeout)
 	if !console {
 		fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
 	}
 }
 
-func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string) {
+func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, defaultTimeout int) {
 	defer wg.Done()
 	for repo := range work {
-		cloneRepo(repo[1], console, repo[0], timestamp)
+		cloneRepo(repo[1], console, repo[0], timestamp, defaultTimeout)
 	}
 }
 
-func Start(_path string, keepfolders bool, console bool, threads int) {
+func Start(_path string, keepfolders bool, console bool, threads int, defaultTimeout int) {
 	timestamp := strconv.Itoa(int(time.Now().Unix()))
 	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(_path), 0700)
@@ -51,7 +51,7 @@ func Start(_path string, keepfolders bool, console bool, threads int) {
 
 	for i := 0; i < threads; i++ {
 		wg.Add(1)
-		go worker(work, wg, console, timestamp)
+		go worker(work, wg, console, timestamp, defaultTimeout)
 	}
 	wg.Wait()
 
@@ -76,7 +76,7 @@ func Start(_path string, keepfolders bool, console bool, threads int) {
 					if !keepfolders {
 						directory = ""
 					}
-					utils.RunCommand("cp "+path+" "+filepath.Join(_path, directory), console)
+					utils.RunCommand("cp "+path+" "+filepath.Join(_path, directory), console, defaultTimeout)
 				}
 			}
 			return nil
