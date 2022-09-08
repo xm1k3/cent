@@ -7,23 +7,41 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 )
 
-func RunCommand(command string, background bool) {
+func RunCommand(command string, background bool, defaultTimeout int) {
 	cmd := exec.Command("bash", "-c", command)
-	if background {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-	} else {
-		var execOut bytes.Buffer
-		var execErr bytes.Buffer
-		cmd.Stdout = &execOut
-		cmd.Stderr = &execErr
-	}
-	err := cmd.Run()
-	if err != nil {
+
+	cmd.Start()
+
+	// Use a channel to signal completion so we can use a select statement
+	done := make(chan error)
+	go func() { done <- cmd.Wait() }()
+
+	// Start a timer
+	timeout := time.After(time.Duration(defaultTimeout) * time.Second)
+
+	select {
+	case <-timeout:
+		cmd.Process.Kill()
 		if background {
-			fmt.Println("Error running shell command: ", command, "  => ", err.Error())
+			fmt.Println("Command timed out:", command)
+		}
+	case err := <-done:
+		if background {
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+		} else {
+			var execOut bytes.Buffer
+			var execErr bytes.Buffer
+			cmd.Stdout = &execOut
+			cmd.Stderr = &execErr
+		}
+		if err != nil {
+			if background {
+				fmt.Println("Error running shell command: ", command, "  => ", err.Error())
+			}
 		}
 	}
 }
