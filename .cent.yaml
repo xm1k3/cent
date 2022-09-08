@@ -12,8 +12,6 @@ exclude-files:
 # Add github urls
 community-templates:
   - https://github.com/projectdiscovery/nuclei-templates.git
-  - https://gist.github.com/0x240x23elu
-  - https://gist.github.com/ResistanceIsUseless/e46848f67706a8aa1205c9d2866bff31
   - https://github.com/0x727/ObserverWard_0x727
   - https://github.com/1in9e/my-nuclei-templates
   - https://github.com/5cr1pt/templates
@@ -31,7 +29,6 @@ community-templates:
   - https://github.com/Harish4948/Nuclei-Templates
   - https://github.com/im403/nuclei-temp
   - https://github.com/javaongsan/nuclei-templates
-  - https://github.com/joanbono/nuclei-templates
   - https://github.com/kabilan1290/templates
   - https://github.com/medbsq/ncl
   - https://github.com/meme-lord/Custom-Nuclei-Templates
