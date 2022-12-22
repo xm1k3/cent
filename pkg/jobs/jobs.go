@@ -15,21 +15,37 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/go-git/go-git/v5"
 	"github.com/spf13/viper"
 	"github.com/xm1k3/cent/internal/utils"
 )
 
-func cloneRepo(gitPath string, console bool, index string, timestamp string, defaultTimeout int) {
-	utils.RunCommand("git clone "+gitPath+" /tmp/cent"+timestamp+"/repo"+index, console, defaultTimeout)
-	if !console {
-		fmt.Println(color.GreenString("[CLONED] \t" + gitPath))
+func cloneRepo(gitPath string, console bool, index string, timestamp string) error {
+	cloneOptions := git.CloneOptions{
+		URL: gitPath,
 	}
+
+	if console {
+		cloneOptions.Progress = os.Stdout
+	}
+
+	_, err := git.PlainClone("/tmp/cent"+timestamp+"/repo"+index, false, &cloneOptions)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(color.GreenString("[CLONED] " + gitPath))
+	return nil
 }
 
 func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, defaultTimeout int) {
 	defer wg.Done()
 	for repo := range work {
-		cloneRepo(repo[1], console, repo[0], timestamp, defaultTimeout)
+		err := cloneRepo(repo[1], console, repo[0], timestamp)
+		if err != nil {
+			fmt.Println(color.RedString("[ERR] clone: " + repo[1] + " - " + err.Error()))
+		}
 	}
 }
 
