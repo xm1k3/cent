@@ -196,5 +196,9 @@ community-templates:
 - [Alra3ees - Emad Shanab](https://twitter.com/Alra3ees)
   - [Nuclei-Templates-Collection](https://github.com/emadshanab/Nuclei-Templates-Collection)
 
+# Disclaimer
+
+Disclaimer: The developer of this tool is not responsible for how the community uses the open source templates collected within it. These templates have not been validated by Project Discovery and are provided as-is.
+
 # License
 Cent is distributed under Apache-2.0 License
