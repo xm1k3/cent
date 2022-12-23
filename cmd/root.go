@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,8 +34,20 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "cent",
 	Short: "Community edition nuclei templates",
-	Long: `Community edition nuclei templates, a simple tool that allows you 
+	Long: `
+ ██████╗███████╗███╗   ██╗████████╗
+██╔════╝██╔════╝████╗  ██║╚══██╔══╝
+██║     █████╗  ██╔██╗ ██║   ██║   
+██║     ██╔══╝  ██║╚██╗██║   ██║   
+╚██████╗███████╗██║ ╚████║   ██║   
+ ╚═════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   
+									   	
+Community edition nuclei templates, a simple tool that allows you 
 to organize all the Nuclei templates offered by the community in one place.
+
+Disclaimer: The developer of this tool is not responsible for how the community 
+uses the open source nuclei-templates collected within it. 
+These templates have not been validated by Project Discovery and are provided as-is.
 
 By xm1k3`,
 	// has an action associated with it:
