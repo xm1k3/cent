@@ -95,7 +95,6 @@ community-templates:
   - https://github.com/ping-0day/templatez
   - https://github.com/praetorian-inc/chariot-launch-nuclei-templates
   - https://github.com/ptyspawnbinbash/template-enhancer
-  - https://github.com/R-s0n/Custom_Vuln_Scan_Templates
   - https://github.com/rafaelcaria/Nuclei-Templates
   - https://github.com/rafaelwdornelas/my-nuclei-templates
   - https://github.com/rahulkadavil/nuclei-templates
@@ -147,6 +146,4 @@ community-templates:
   - https://github.com/abbycantcode/Nuclei-Template
   - https://github.com/pacho15/mynuclei_templates
   - https://github.com/pikpikcu/my-nuclei-templates
-  - https://github.com/zinminphyo0/KozinTemplates
-  - https://github.com/pacho15/mynuclei_templates
   - https://github.com/SirBugs/Priv8-Nuclei-Templates
