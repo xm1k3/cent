@@ -28,3 +28,5 @@ jobs:
           args: "release --rm-dist"
           version: latest
           workdir: .
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
