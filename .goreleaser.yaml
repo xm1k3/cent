@@ -24,7 +24,8 @@ builds:
       goarch: 'arm64'
 
   binary: '{{ .ProjectName }}'
-  main: cmd/{{ .ProjectName }}/{{ .ProjectName }}.go
+  # main: cmd/{{ .ProjectName }}/{{ .ProjectName }}.go
+  main: main.go
 
 archives:
 - format: zip
@@ -32,4 +33,3 @@ archives:
 
 checksum:
   algorithm: sha256
-  
