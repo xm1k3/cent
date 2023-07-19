@@ -11,12 +11,10 @@ exclude-files:
 
 # Add github urls
 community-templates:
-  - https://github.com/0XParthJ/Nuclei-Templates
   - https://github.com/0x727/ObserverWard_0x727
   - https://github.com/0xAwali/Virtual-Host
   - https://github.com/0xPugazh/my-nuclei-templates
   - https://github.com/0xmaximus/final_freaking_nuclei_templates
-  - https://github.com/1dayluo/My-Nuclei-Templates
   - https://github.com/1in9e/my-nuclei-templates
   - https://github.com/5cr1pt/templates
   - https://github.com/ARPSyndicate/kenzer-templates
@@ -92,7 +90,6 @@ community-templates:
   - https://github.com/pentest-dev/Profesional-Nuclei-Templates
   - https://github.com/pikpikcu/nuclei-templates
   - https://github.com/ping-0day/templates
-  - https://github.com/ping-0day/templatez
   - https://github.com/praetorian-inc/chariot-launch-nuclei-templates
   - https://github.com/ptyspawnbinbash/template-enhancer
   - https://github.com/rafaelcaria/Nuclei-Templates
@@ -125,7 +122,6 @@ community-templates:
   - https://github.com/toramanemre/apache-solr-log4j-CVE-2021-44228
   - https://github.com/toramanemre/log4j-rce-detect-waf-bypass
   - https://github.com/trickest/log4j
-  - https://github.com/trungkay2/Nuclei-template
   - https://github.com/wasp76b/nuclei-templates
   - https://github.com/wr00t/templates
   - https://github.com/xinZa1/template
@@ -134,16 +130,6 @@ community-templates:
   - https://github.com/z3bd/nuclei-templates
   - https://github.com/zer0yu/Open-PoC
   - https://github.com/zinminphyo0/KozinTemplates
-  - https://github.com/foulenzer/foulenzer-templates
-  - https://github.com/joanbono/nuclei-templates
-  - https://github.com/Nithissh0708/Custom-Nuclei-Templates
-  - https://github.com/ChiaraNRTT96/BountySkill
   - https://github.com/bhataasim1/PersonalTemplates.git
-  - https://github.com/themastersunil/Nuclei-TamplatesBackup.git
-  - https://github.com/themastersunil/nucleiDB
-  - https://github.com/Linuxinet/nuclei-templates
-  - https://github.com/Aituglo/nuclei-templates
-  - https://github.com/abbycantcode/Nuclei-Template
-  - https://github.com/pacho15/mynuclei_templates
   - https://github.com/pikpikcu/my-nuclei-templates
   - https://github.com/SirBugs/Priv8-Nuclei-Templates
