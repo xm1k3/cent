@@ -66,3 +66,13 @@ func DownloadFile(filepath string, url string) error {
 	_, err = io.Copy(out, resp.Body)
 	return err
 }
+
+func RemoveStringFromSlice(slice []string, strToRemove string) []string {
+	result := []string{}
+	for _, str := range slice {
+		if str != strToRemove {
+			result = append(result, str)
+		}
+	}
+	return result
+}
