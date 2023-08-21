@@ -95,16 +95,16 @@ output:
 # Usage
 
 ```
-▶ cent -h
-▶ cent init -h
-▶ cent update -h
-▶ cent version
+cent -h
+cent init -h
+cent update -h
+cent version
 ```
 Example:
 
 Clone and insert all the community templates into the `cent-nuclei-templates` folder 
 ```
-▶ cent -p cent-nuclei-templates -k
+cent -p cent-nuclei-templates -k
 ```
 ![cent](./static/img/cent-v1.0.png)
 
@@ -117,7 +117,7 @@ exclude-dirs:
 ```
 just do:
 ```
-▶ cent update -p cent-nuclei-templates -d
+cent update -p cent-nuclei-templates -d
 ```
 and `cent` will automatically delete all `dns` folder present in `cent-nuclei-templates` without cloning all the github repos.
 
@@ -125,15 +125,15 @@ and `cent` will automatically delete all `dns` folder present in `cent-nuclei-te
 
 Same thing with `exclude-files`
 ```
-▶ cent update -p cent-nuclei-templates -f
+cent update -p cent-nuclei-templates -f
 ```
 ---
 Once cent has been configured correctly you can perform a scan with Nuclei.
 
 Example
 ```
-▶ nuclei -u https://example.com -t ./cent-nuclei-templates -tags cve
-▶ nuclei -l urls.txt -t ./cent-nuclei-templates -tags cve
+nuclei -u https://example.com -t ./cent-nuclei-templates -tags cve
+nuclei -l urls.txt -t ./cent-nuclei-templates -tags cve
 ```
 See [here](https://nuclei.projectdiscovery.io/nuclei/get-started/#running-nuclei) for more documentation about Nuclei
 
