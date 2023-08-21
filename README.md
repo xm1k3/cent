@@ -31,7 +31,9 @@ after installation run `cent init` to initialize cent with the configuration fil
 
 | Command | Description            |
 | ------- | ---------------------- |
+| check | Check if templates repo are still available |
 | init    | Cent init configuration file      |
+| summary | Print summary table | 
 | update  | Update your repository |
 | version  | Print cent version |
 
@@ -63,6 +65,32 @@ Flags:
   -o, --overwrite    If the cent file exists overwrite it
   -u, --url string   Url from which you can download the configurations for .cent.yaml
 ```
+
+# Check flags
+```
+Flags:
+  -h, --help     help for check
+  -r, --remove   Remove from .cent.yaml urls that are no longer accessible or are currently private
+```
+
+# Summary flags
+
+```
+Flags:
+  -h, --help          help for summary
+  -p, --path string   Root path to save the templates (default "cent-nuclei-templates")
+
+output: 
+
++-------------------------------+-----------------+
+| TEMPLATES TYPE                | TEMPLATES COUNT |
++-------------------------------+-----------------+
+| CVE Templates                 |           21981 |
+| Other Vulnerability Templates |           16779 |
+| Total Templates               |           38760 |
++-------------------------------+-----------------+
+```
+
 
 # Usage
 
@@ -248,7 +276,9 @@ community-templates:
   - https://github.com/zinminphyo0/KozinTemplates
   - https://github.com/bhataasim1/PersonalTemplates.git
   - https://github.com/pikpikcu/my-nuclei-templates
-  - https://github.com/SirBugs/Priv8-Nuclei-Templates```
+  - https://github.com/SirBugs/Priv8-Nuclei-Templates
+
+```
 
 ## Credits
 - [hakluke](https://twitter.com/hakluke)
