@@ -57,13 +57,14 @@ By xm1k3`,
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
 		timeout, _ := cmd.Flags().GetInt("timeout")
-
 		home, err := homedir.Dir()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		if _, err := os.Stat(path.Join(home, ".cent.yaml")); os.IsNotExist(err) {
+		_, errHome := os.Stat(path.Join(home, ".cent.yaml"))
+		_, errDefault := os.Stat(cfgFile)
+		if os.IsNotExist(errHome) && os.IsNotExist(errDefault) {
 			fmt.Println(`Run ` + color.YellowString("cent init") + ` to automatically download ` +
 				color.HiCyanString(".cent.yaml") + ` from repo and copy it to ` +
 				color.HiCyanString("$HOME/.cent.yaml"))
@@ -71,6 +72,9 @@ By xm1k3`,
 		}
 
 		fmt.Println(color.CyanString("cent started"))
+
+		log.Fatal(1)
+
 		jobs.Start(pathFlag, keepfolders, console, threads, timeout)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
