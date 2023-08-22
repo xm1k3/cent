@@ -57,6 +57,7 @@ By xm1k3`,
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
 		timeout, _ := cmd.Flags().GetInt("timeout")
+
 		home, err := homedir.Dir()
 		if err != nil {
 			log.Fatal(err)
@@ -72,8 +73,6 @@ By xm1k3`,
 		}
 
 		fmt.Println(color.CyanString("cent started"))
-
-		log.Fatal(1)
 
 		jobs.Start(pathFlag, keepfolders, console, threads, timeout)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
