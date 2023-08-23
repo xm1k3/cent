@@ -12,16 +12,16 @@ exclude-files:
 # Add github urls
 community-templates:
   - https://github.com/projectdiscovery/nuclei-templates
-  - https://github.com/0x727/ObserverWard_0x727
+  - https://github.com/0x727/ObserverWard
   - https://github.com/0xAwali/Virtual-Host
   - https://github.com/0xPugazh/my-nuclei-templates
   - https://github.com/0xmaximus/final_freaking_nuclei_templates
   - https://github.com/1in9e/my-nuclei-templates
-  - https://github.com/5cr1pt/templates
+  - https://github.com/wr00t/templates
   - https://github.com/ARPSyndicate/kenzer-templates
   - https://github.com/Akokonunes/Private-Nuclei-Templates
   - https://github.com/Arvinthksrct/alltemplate
-  - https://github.com/AshiqurEmon/nuclei_templates.git
+  - https://github.com/AshiqurEmon/nuclei_templates
   - https://github.com/CharanRayudu/Custom-Nuclei-Templates
   - https://github.com/DoubleTakes/nuclei-templates
   - https://github.com/Elsfa7-110/mynuclei-templates
@@ -37,7 +37,7 @@ community-templates:
   - https://github.com/NightRang3r/misc_nuclei_templates
   - https://github.com/NitinYadav00/My-Nuclei-Templates
   - https://github.com/Odayex/Random-Nuclei-Templates
-  - https://github.com/PedroFerreira97/nuclei_templates
+  - https://github.com/PedroF-369/nuclei_templates
   - https://github.com/R-s0n/Custom_Vuln_Scan_Templates
   - https://github.com/Saimonkabir/Nuclei-Templates
   - https://github.com/Saptak9983/Nuclei-Template
@@ -115,7 +115,7 @@ community-templates:
   - https://github.com/thebrnwal/Content-Injection-Nuclei-Script
   - https://github.com/thecyberneh/nuclei-templatess
   - https://github.com/thelabda/nuclei-templates
-  - https://github.com/themoonbaba/private_templates
+  - https://github.com/boobooHQ/private_templates
   - https://github.com/rix4uni/BugBountyTips
   - https://github.com/Lu3ky13/Authorization-Nuclei-Templates
   - https://github.com/bug-vs-me/nuclei
@@ -130,6 +130,6 @@ community-templates:
   - https://github.com/yavolo/nuclei-templates
   - https://github.com/z3bd/nuclei-templates
   - https://github.com/zer0yu/Open-PoC
-  - https://github.com/bhataasim1/PersonalTemplates.git
+  - https://github.com/bhataasim1/PersonalTemplates
   - https://github.com/pikpikcu/my-nuclei-templates
   - https://github.com/SirBugs/Priv8-Nuclei-Templates
