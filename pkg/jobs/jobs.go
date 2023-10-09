@@ -73,30 +73,39 @@ func Start(_path string, keepfolders bool, console bool, threads int, defaultTim
 
 	dirname := "/tmp/cent" + timestamp + "/"
 
-	filepath.Walk(dirname,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			directory := getDirPath(strings.TrimPrefix(path, dirname))
-			if info.IsDir() {
-				if keepfolders {
-					if _, err := os.Stat(filepath.Join(_path, directory)); os.IsNotExist(err) {
-						// fmt.Println(_path, name, directory)
-						os.Mkdir(filepath.Join(_path, directory), 0700)
-					}
-				}
-			} else {
-				basename := info.Name()
-				if filepath.Ext(basename) == ".yaml" {
-					if !keepfolders {
-						directory = ""
-					}
-					utils.RunCommand("cp "+path+" "+filepath.Join(_path, directory), console, defaultTimeout)
+	filepath.Walk(dirname, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		directory := getDirPath(strings.TrimPrefix(path, dirname))
+
+		if info.IsDir() {
+			if keepfolders {
+				destinationDir := filepath.Join(_path, directory)
+				if _, err := os.Stat(destinationDir); os.IsNotExist(err) {
+					os.Mkdir(destinationDir, 0700)
 				}
 			}
-			return nil
-		})
+		} else {
+			basename := info.Name()
+			if filepath.Ext(basename) == ".yaml" {
+				if !keepfolders {
+					directory = ""
+				}
+
+				sourcePath := path
+				destinationPath := filepath.Join(_path, directory, basename)
+
+				err := utils.CopyFile(sourcePath, destinationPath)
+				if err != nil {
+					return err
+				}
+			}
+		}
+
+		return nil
+	})
 
 	DeleteFromTmp(dirname)
 }
