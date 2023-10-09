@@ -21,21 +21,18 @@ import (
 )
 
 func cloneRepo(gitPath string, console bool, index string, timestamp string) error {
-	cloneOptions := git.CloneOptions{
+	cloneOptions := &git.CloneOptions{
 		URL: gitPath,
 	}
 
-	if console {
-		cloneOptions.Progress = os.Stdout
-	}
+	destDir := filepath.Join(os.TempDir(), fmt.Sprintf("cent%s/repo%s", timestamp, index))
 
-	_, err := git.PlainClone("/tmp/cent"+timestamp+"/repo"+index, false, &cloneOptions)
-
+	_, err := git.PlainClone(destDir, false, cloneOptions)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(color.GreenString("[CLONED] " + gitPath))
+	fmt.Printf(color.GreenString("[CLONED] %s\n", gitPath))
 	return nil
 }
 
@@ -49,7 +46,7 @@ func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp str
 	}
 }
 
-func Start(_path string, keepfolders bool, console bool, threads int, defaultTimeout int) {
+func Start(_path string, console bool, threads int, defaultTimeout int) {
 	timestamp := strconv.Itoa(int(time.Now().Unix()))
 	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(_path), 0700)
@@ -71,7 +68,7 @@ func Start(_path string, keepfolders bool, console bool, threads int, defaultTim
 	}
 	wg.Wait()
 
-	dirname := "/tmp/cent" + timestamp + "/"
+	dirname := filepath.Join(os.TempDir(), "cent"+timestamp)
 
 	filepath.Walk(dirname, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -81,19 +78,10 @@ func Start(_path string, keepfolders bool, console bool, threads int, defaultTim
 		directory := getDirPath(strings.TrimPrefix(path, dirname))
 
 		if info.IsDir() {
-			if keepfolders {
-				destinationDir := filepath.Join(_path, directory)
-				if _, err := os.Stat(destinationDir); os.IsNotExist(err) {
-					os.Mkdir(destinationDir, 0700)
-				}
-			}
 		} else {
 			basename := info.Name()
 			if filepath.Ext(basename) == ".yaml" {
-				if !keepfolders {
-					directory = ""
-				}
-
+				directory = ""
 				sourcePath := path
 				destinationPath := filepath.Join(_path, directory, basename)
 
