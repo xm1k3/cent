@@ -1,49 +1,30 @@
 package utils
 
 import (
-	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
-	"time"
 )
 
-func RunCommand(command string, background bool, defaultTimeout int) {
-	cmd := exec.Command("bash", "-c", command)
-
-	cmd.Start()
-
-	// Use a channel to signal completion so we can use a select statement
-	done := make(chan error)
-	go func() { done <- cmd.Wait() }()
-
-	// Start a timer
-	timeout := time.After(time.Duration(defaultTimeout) * time.Second)
-
-	select {
-	case <-timeout:
-		cmd.Process.Kill()
-		if background {
-			fmt.Println("Command timed out:", command)
-		}
-	case err := <-done:
-		if background {
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-		} else {
-			var execOut bytes.Buffer
-			var execErr bytes.Buffer
-			cmd.Stdout = &execOut
-			cmd.Stderr = &execErr
-		}
-		if err != nil {
-			if background {
-				fmt.Println("Error running shell command: ", command, "  => ", err.Error())
-			}
-		}
+func CopyFile(sourcePath, destinationPath string) error {
+	sourceFile, err := os.Open(sourcePath)
+	if err != nil {
+		return err
 	}
+	defer sourceFile.Close()
+
+	destinationFile, err := os.Create(destinationPath)
+	if err != nil {
+		return err
+	}
+	defer destinationFile.Close()
+
+	_, err = io.Copy(destinationFile, sourceFile)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func DownloadFile(filepath string, url string) error {

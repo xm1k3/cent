@@ -53,7 +53,6 @@ By xm1k3`,
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		pathFlag, _ := cmd.Flags().GetString("path")
-		keepfolders, _ := cmd.Flags().GetBool("keepfolders")
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
 		timeout, _ := cmd.Flags().GetInt("timeout")
@@ -74,7 +73,7 @@ By xm1k3`,
 
 		fmt.Println(color.CyanString("cent started"))
 
-		jobs.Start(pathFlag, keepfolders, console, threads, timeout)
+		jobs.Start(pathFlag, console, threads, timeout)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
 		jobs.RemoveDuplicates(path.Join(pathFlag), console)
@@ -95,7 +94,6 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cent.yaml)")
 
 	rootCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
-	rootCmd.Flags().BoolP("keepfolders", "k", false, "Keep folders (by default it only saves yaml files)")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
 	rootCmd.Flags().IntP("threads", "t", 10, "Number of threads to use when cloning repositories")
 	rootCmd.Flags().IntP("timeout", "T", 2, "timeout in seconds")
