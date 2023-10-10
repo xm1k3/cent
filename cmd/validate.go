@@ -17,7 +17,7 @@ import (
 var validateCmd = &cobra.Command{
 	Use:   "validate",
 	Short: "Validate templates",
-	Long:  `Validate templates`,
+	Long:  `Validate templates, if the template is invalid it is deleted from the folder`,
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := rootCmd.Flags().GetString("path")
 
