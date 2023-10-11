@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/spf13/cobra"
 	"github.com/xm1k3/cent/pkg/jobs"
@@ -21,29 +22,36 @@ var validateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := rootCmd.Flags().GetString("path")
 
+		var wg sync.WaitGroup
 		filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
 			if info.IsDir() {
 			} else if filepath.Ext(filePath) == ".yaml" {
-				data, err := readFile(filePath)
-				if err != nil {
-					return err
-				}
+				wg.Add(1)
+				go func(filePath string) {
+					defer wg.Done()
 
-				isValid, err := jobs.ValidateTemplate(data)
-				if err != nil {
-					fmt.Println(filePath, err)
-				}
+					data, err := readFile(filePath)
+					if err != nil {
+						return
+					}
 
-				if !isValid {
-					os.Remove(filePath)
-				}
+					isValid, err := jobs.ValidateTemplate(data)
+					if err != nil {
+						fmt.Println(filePath, err)
+					}
+
+					if !isValid {
+						os.Remove(filePath)
+					}
+				}(filePath)
 			}
 			return nil
 		})
 
+		wg.Wait()
 	},
 }
 
