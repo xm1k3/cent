@@ -91,6 +91,8 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cent.yaml)")
 
 	rootCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
