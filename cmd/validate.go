@@ -18,7 +18,9 @@ import (
 var validateCmd = &cobra.Command{
 	Use:   "validate",
 	Short: "Validate templates",
-	Long:  `Validate templates, if the template is invalid it is deleted from the folder`,
+	Long: `The validate command is a part of the application's functionality to validate templates. 
+When executed, it scans a specified folder for YAML files. Each YAML file is checked for validity. 
+If a template is found to be invalid, it is deleted from the folder.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := rootCmd.Flags().GetString("path")
 
