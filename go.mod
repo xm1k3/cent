@@ -1,6 +1,6 @@
 module github.com/xm1k3/cent
 
-go 1.18
+go 1.20
 
 require (
 	github.com/fatih/color v1.15.0
@@ -60,7 +60,7 @@ require (
 	github.com/projectdiscovery/retryabledns v1.0.38 // indirect
 	github.com/projectdiscovery/utils v0.0.57 // indirect
 	github.com/quic-go/quic-go v0.37.4 // indirect
-	github.com/refraction-networking/utls v1.5.3 // indirect
+	github.com/refraction-networking/utls v1.5.4 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sagikazarmark/locafero v0.3.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
