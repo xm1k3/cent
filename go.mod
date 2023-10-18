@@ -1,13 +1,13 @@
 module github.com/xm1k3/cent
 
-go 1.20
+go 1.19
 
 require (
 	github.com/fatih/color v1.15.0
 	github.com/go-git/go-git/v5 v5.9.0
 	github.com/jedib0t/go-pretty v4.3.0+incompatible
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/projectdiscovery/retryablehttp-go v1.0.30
+	github.com/projectdiscovery/retryablehttp-go v1.0.31
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.17.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -54,10 +54,10 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/projectdiscovery/blackrock v0.0.1 // indirect
-	github.com/projectdiscovery/fastdialer v0.0.38 // indirect
-	github.com/projectdiscovery/hmap v0.0.21 // indirect
+	github.com/projectdiscovery/fastdialer v0.0.39 // indirect
+	github.com/projectdiscovery/hmap v0.0.22 // indirect
 	github.com/projectdiscovery/networkpolicy v0.0.6 // indirect
-	github.com/projectdiscovery/retryabledns v1.0.37 // indirect
+	github.com/projectdiscovery/retryabledns v1.0.38 // indirect
 	github.com/projectdiscovery/utils v0.0.57 // indirect
 	github.com/quic-go/quic-go v0.37.4 // indirect
 	github.com/refraction-networking/utls v1.5.3 // indirect
@@ -90,11 +90,11 @@ require (
 	go.etcd.io/bbolt v1.3.7 // indirect
 	go.mongodb.org/mongo-driver v1.11.3 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/mod v0.12.0 // indirect
-	golang.org/x/net v0.15.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.13.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
