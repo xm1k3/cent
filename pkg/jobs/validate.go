@@ -3,9 +3,10 @@ package jobs
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 
-	"github.com/projectdiscovery/retryablehttp-go"
+	retryablehttp "github.com/hashicorp/go-retryablehttp"
 )
 
 const (
@@ -66,10 +67,21 @@ type TemplateResp struct {
 }
 
 func ValidateTemplate(data string) (bool, error) {
-	resp, err := retryablehttp.DefaultClient().Post(fmt.Sprintf("%s/validate", tmBaseUrlDefault), "application/x-yaml", strings.NewReader(data))
+	client := retryablehttp.NewClient()
+	client.Logger = nil
+	req, err := retryablehttp.NewRequest("POST", fmt.Sprintf("%s/validate", tmBaseUrlDefault), strings.NewReader(data))
 	if err != nil {
 		return false, err
 	}
+	req.Header.Set("Content-Type", "application/x-yaml")
+
+	var resp *http.Response
+
+	resp, err = client.Do(req)
+	if err != nil {
+		return false, err
+	}
+
 	if resp.StatusCode != 200 {
 		return false, fmt.Errorf("unexpected status code: %v", resp.Status)
 	}
