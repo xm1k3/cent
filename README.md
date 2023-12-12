@@ -35,7 +35,7 @@ after installation run `cent init` to initialize cent with the configuration fil
 | init    | Cent init configuration file      |
 | summary | Print summary table | 
 | update  | Update your repository |
-| validate | The validate command is a part of the application's functionality to validate templates. When executed, it scans a specified folder for YAML files. Each YAML file is checked for validity. If a template is found to be invalid, it is deleted from the folder. |
+| validate | Validate templates, if the template is invalid it is deleted from the folder |
 | version  | Print cent version |
 
 # Root flags
