@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"sync"
@@ -27,7 +28,7 @@ If a template is found to be invalid, it is deleted from the folder.`,
 		var wg sync.WaitGroup
 		filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
 			if err != nil {
-				return err
+				log.Fatal(err)
 			}
 			if info.IsDir() {
 			} else if filepath.Ext(filePath) == ".yaml" {
