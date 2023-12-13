@@ -22,7 +22,7 @@ var validateCmd = &cobra.Command{
 When executed, it scans a specified folder for YAML files. Each YAML file is checked for validity. 
 If a template is found to be invalid, it is deleted from the folder.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		path, _ := rootCmd.Flags().GetString("path")
+		path, _ := cmd.Flags().GetString("path")
 
 		var wg sync.WaitGroup
 		filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
@@ -67,4 +67,5 @@ func readFile(filePath string) (string, error) {
 
 func init() {
 	rootCmd.AddCommand(validateCmd)
+	validateCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
 }
