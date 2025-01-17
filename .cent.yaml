@@ -240,7 +240,6 @@ community-templates:
   - https://github.com/thecyberneh/nuclei-templatess
   - https://github.com/thelabda/nuclei-templates
   - https://github.com/themoonbaba/private_templates/blob/main/springboot_heapdump.yaml
-  - https://github.com/topscoder/nuclei-wordfence-cve
   - https://github.com/toramanemre/apache-solr-log4j-CVE-2021-44228
   - https://github.com/toramanemre/log4j-rce-detect-waf-bypass
   - https://github.com/trickest/log4j
