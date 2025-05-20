@@ -23,6 +23,9 @@ import (
 func cloneRepo(gitPath string, console bool, index string, timestamp string) error {
 	cloneOptions := &git.CloneOptions{
 		URL: gitPath,
+		Depth: 1,
+		SingleBranch: true,
+		Tags: git.NoTags,
 	}
 
 	destDir := filepath.Join(os.TempDir(), fmt.Sprintf("cent%s/repo%s", timestamp, index))
