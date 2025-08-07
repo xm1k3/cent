@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/fatih/color"
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
+	"github.com/xm1k3/cent/internal/utils"
 	"github.com/xm1k3/cent/pkg/jobs"
 )
 
@@ -37,15 +37,19 @@ var updateCmd = &cobra.Command{
 		directories, _ := cmd.Flags().GetBool("directories")
 		files, _ := cmd.Flags().GetBool("files")
 
-		home, err := homedir.Dir()
-		if err != nil {
-			log.Fatal(err)
+		configPath := cfgFile
+		if configPath == "" {
+			configDir, err := utils.GetDataDir()
+			if err != nil {
+				log.Fatalf("Failed to get config directory: %v", err)
+			}
+			configPath = filepath.Join(configDir, ".cent.yaml")
 		}
 
-		if _, err := os.Stat(path.Join(home, ".cent.yaml")); os.IsNotExist(err) {
+		if _, err := os.Stat(configPath); os.IsNotExist(err) {
 			fmt.Println(`Run ` + color.YellowString("cent init") + ` to automatically download ` +
 				color.HiCyanString(".cent.yaml") + ` from repo and copy it to ` +
-				color.HiCyanString("$HOME/.cent.yaml"))
+				color.HiCyanString(".config/cent/.cent.yaml"))
 			return
 		}
 
@@ -64,8 +68,7 @@ var updateCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(updateCmd)
 
-	updateCmd.Flags().BoolP("directories", "d", false, "If true remove unnecessary folders from updated $HOME/.cent.yaml")
-	updateCmd.Flags().BoolP("files", "f", false, "If true remove unnecessary files from updated $HOME/.cent.yaml")
+	updateCmd.Flags().BoolP("directories", "d", false, "If true remove unnecessary folders from updated .cent.yaml")
+	updateCmd.Flags().BoolP("files", "f", false, "If true remove unnecessary files from updated .cent.yaml")
 	updateCmd.Flags().StringP("path", "p", "", "Path to folder with nuclei templates")
-
 }

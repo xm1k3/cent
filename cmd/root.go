@@ -23,9 +23,9 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"github.com/xm1k3/cent/internal/utils"
 	"github.com/xm1k3/cent/pkg/jobs"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -57,17 +57,18 @@ By xm1k3`,
 		threads, _ := cmd.Flags().GetInt("threads")
 		timeout, _ := cmd.Flags().GetInt("timeout")
 
-		home, err := homedir.Dir()
+		configDir, err := utils.GetDataDir()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		_, errHome := os.Stat(path.Join(home, ".cent.yaml"))
+		configFilePath := path.Join(configDir, ".cent.yaml")
+		_, errHome := os.Stat(configFilePath)
 		_, errDefault := os.Stat(cfgFile)
 		if os.IsNotExist(errHome) && os.IsNotExist(errDefault) {
 			fmt.Println(`Run ` + color.YellowString("cent init") + ` to automatically download ` +
 				color.HiCyanString(".cent.yaml") + ` from repo and copy it to ` +
-				color.HiCyanString("$HOME/.cent.yaml"))
+				color.HiCyanString(".config/cent/.cent.yaml"))
 			return
 		}
 
@@ -93,7 +94,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cent.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is .config/cent/.cent.yaml)")
 
 	rootCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
@@ -108,13 +109,13 @@ func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
-		home, err := homedir.Dir()
+		configDir, err := utils.GetDataDir()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(configDir)
 		viper.SetConfigName(".cent")
 	}
 

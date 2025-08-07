@@ -4,6 +4,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 func CopyFile(sourcePath, destinationPath string) error {
@@ -56,4 +58,27 @@ func RemoveStringFromSlice(slice []string, strToRemove string) []string {
 		}
 	}
 	return result
+}
+
+func GetDataDir() (string, error) {
+	toolName := "cent"
+
+	switch runtime.GOOS {
+	case "windows":
+		appData := os.Getenv("APPDATA")
+		if appData == "" {
+			home, err := os.UserHomeDir()
+			if err != nil {
+				return "", err
+			}
+			return filepath.Join(home, toolName), nil
+		}
+		return filepath.Join(appData, toolName), nil
+	default:
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		return filepath.Join(home, ".config", toolName), nil
+	}
 }

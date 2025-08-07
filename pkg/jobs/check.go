@@ -2,8 +2,8 @@ package jobs
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -19,7 +19,7 @@ type Config struct {
 }
 
 func CheckConfig(configPath string, removeFlag bool) error {
-	yamlFile, err := ioutil.ReadFile(configPath)
+	yamlFile, err := os.ReadFile(configPath)
 	if err != nil {
 		return err
 	}
@@ -33,8 +33,13 @@ func CheckConfig(configPath string, removeFlag bool) error {
 	var wg sync.WaitGroup
 
 	for _, url := range config.CommunityTemplates {
-		wg.Add(1)
+		if removeFlag && strings.Contains(url, "gist.github.com") {
+			fmt.Println(color.YellowString("[INFO] Ignoring and removing gist.github.com URL: %s", url))
+			RemoveURLFromConfig(configPath, url)
+			continue
+		}
 
+		wg.Add(1)
 		go func(url string) {
 			defer wg.Done()
 
@@ -65,7 +70,7 @@ func CheckConfig(configPath string, removeFlag bool) error {
 }
 
 func RemoveURLFromConfig(configPath, url string) error {
-	yamlFile, err := ioutil.ReadFile(configPath)
+	yamlFile, err := os.ReadFile(configPath)
 	if err != nil {
 		return err
 	}
@@ -90,7 +95,7 @@ func RemoveURLFromConfig(configPath, url string) error {
 	updatedYAMLString := string(updatedYAML)
 	updatedYAMLString = strings.ReplaceAll(updatedYAMLString, "  ", " ")
 
-	err = ioutil.WriteFile(configPath, []byte(updatedYAMLString), 0644)
+	err = os.WriteFile(configPath, []byte(updatedYAMLString), 0644)
 	if err != nil {
 		return err
 	}
