@@ -1,4 +1,4 @@
-![Cent](./static/img/cent_banner.png)
+![Cent](./static/img/Cent_banner.png)
 
 Community edition nuclei templates, a simple tool that allows you to organize all the Nuclei templates offered by the community in one place.
 
