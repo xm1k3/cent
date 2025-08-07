@@ -1,4 +1,4 @@
-![Cent](./static/img/Cent_banner.png)
+![Cent](./static/img/cent_banner.png)
 
 Community edition nuclei templates, a simple tool that allows you to organize all the Nuclei templates offered by the community in one place.
 
@@ -33,7 +33,7 @@ after installation run `cent init` to initialize cent with the configuration fil
 | ------- | ---------------------- |
 | check | Check if templates repo are still available |
 | init    | Cent init configuration file      |
-| summary | Print summary table | 
+| summary | Print detailed summary of nuclei templates |
 | update  | Update your repository |
 | validate | Validate templates, if the template is invalid it is deleted from the folder |
 | version  | Print cent version |
@@ -42,7 +42,7 @@ after installation run `cent init` to initialize cent with the configuration fil
 
 ```
 Flags:
-      --config string   config file (default is $HOME/.cent.yaml)
+      --config string   config file (default is .config/cent/.cent.yaml)
   -C, --console         Print console output
   -p, --path string     Root path to save the templates (default "cent-nuclei-templates")
   -t, --threads int     Number of threads to use when cloning repositories (default 10)
@@ -60,13 +60,124 @@ cent summary -h
 cent validate -h
 cent version
 ```
-Example:
+
+## Basic Usage
 
 Clone and insert all the community templates into the `cent-nuclei-templates` folder 
 ```
 cent -p cent-nuclei-templates
 ```
-![cent](./static/img/cent-v1.0.png)
+
+Example output:
+```
+cent started
+[CLONED] https://github.com/projectdiscovery/nuclei-templates
+[CLONED] https://github.com/0xSojalSec/nuclei-templates-4
+[CLONED] https://github.com/0xPugazh/my-nuclei-templates
+[CLONED] https://github.com/0xSojalSec/my-nuclei-templates-1
+[CLONED] https://github.com/0x727/ObserverWard
+[CLONED] https://github.com/0xAwali/Blind-SSRF
+[CLONED] https://github.com/0x727/ObserverWard_0x727
+[CLONED] https://github.com/0xAwali/Virtual-Host
+[CLONED] https://github.com/0xSojalSec/Nuclei-Templates-API-Linkfinder
+...
+... 
+...
+cent finished, you can find all your nuclei-templates in cent-nuclei-templates
+```
+
+## Summary Command
+
+The `summary` command provides detailed statistics about your nuclei templates collection:
+
+### Basic Summary
+```bash
+# Display summary in table format
+cent summary
+
+# Display summary in JSON format
+cent summary --json
+```
+
+### Advanced Summary Features
+```bash
+# Limit number of tags displayed (default: 25)
+cent summary --limit 10
+
+# Search for specific data in summary
+cent summary --search cve
+cent summary --search wordpress
+cent summary --search critical
+
+# Update summary data
+cent summary update
+
+# Update with custom path
+cent summary update -p /path/to/templates
+```
+
+### Summary Output Example
+```
+=== NUCLEI TEMPLATES SUMMARY ===
+
++-------------------+-------+
+| METRIC            | COUNT |
++-------------------+-------+
+| Total Templates   |  3249 |
+| CVE Templates     |  3821 |
+| Invalid Templates |     1 |
+| Valid Templates   |  3248 |
++-------------------+-------+
+
+=== SEVERITY DISTRIBUTION ===
++----------+-------+
+| SEVERITY | COUNT |
++----------+-------+
+| CRITICAL |   582 |
+| HIGH     |   877 |
+| MEDIUM   |   877 |
+| LOW      |    63 |
+| INFO     |   744 |
++----------+-------+
+
+=== TOP TAGS ===
++---------------+-------+
+| TAG           | COUNT |
++---------------+-------+
+| cve           |  1909 |
+| xss           |   569 |
+| wordpress     |   487 |
+| lfi           |   459 |
+| wp-plugin     |   450 |
++---------------+-------+
+```
+
+### JSON Output Structure
+```json
+{
+  "metrics": {
+    "total_templates": 3249,
+    "cve_templates": 3821,
+    "invalid_templates": 1,
+    "valid_templates": 3248
+  },
+  "severity_distribution": {
+    "CRITICAL": 582,
+    "HIGH": 877,
+    "MEDIUM": 877,
+    "LOW": 63,
+    "INFO": 744
+  },
+  "tags": {
+    "cve": 1909,
+    "xss": 569,
+    "wordpress": 487
+  },
+  "last_updated": "2024-01-15 14:30:25"
+}
+```
+
+## Update Command
 
 If you have updated the `cent.yaml` file by adding new folders
 ```yaml
@@ -81,12 +192,46 @@ cent update -p cent-nuclei-templates -d
 ```
 and `cent` will automatically delete all `dns` folder present in `cent-nuclei-templates` without cloning all the github repos.
 
-![cent update](./static/img/cent-update.png)
+Example output:
+```
+[D][-] Dir  removed	cent-nuclei-templates/dns
+[D][-] Dir  removed	cent-nuclei-templates/dns/subdomain
+```
 
 Same thing with `exclude-files`
 ```
 cent update -p cent-nuclei-templates -f
 ```
+
+## Configuration Management
+
+### Initialize Configuration
+```bash
+# Initialize with default configuration
+cent init
+
+# Initialize with custom URL
+cent init --url https://example.com/config.yaml
+
+# Overwrite existing configuration
+cent init --overwrite
+```
+
+### Check Configuration Status
+```bash
+# Check if configuration file exists
+cent init check
+```
+
+### Check Template Repositories
+```bash
+# Check if all template repositories are accessible
+cent check
+
+# Remove inaccessible repositories from config
+cent check --remove
+```
+
 ---
 Once cent has been configured correctly you can perform a scan with Nuclei.
 
@@ -99,7 +244,7 @@ See [here](https://nuclei.projectdiscovery.io/nuclei/get-started/#running-nuclei
 
 
 # Config
-You need to configure `cent` parameters in `$HOME/.cent.yaml`
+You need to configure `cent` parameters in `.config/cent/.cent.yaml`
 ```yaml
 # Directories to exclude
 exclude-dirs:
