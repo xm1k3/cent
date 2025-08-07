@@ -17,8 +17,10 @@ package cmd
 
 import (
 	"log"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/xm1k3/cent/internal/utils"
 	"github.com/xm1k3/cent/pkg/jobs"
 )
 
@@ -29,7 +31,17 @@ var checkCmd = &cobra.Command{
 	Long:  `Check if templates repo are still available`,
 	Run: func(cmd *cobra.Command, args []string) {
 		removeFlag, _ := cmd.Flags().GetBool("remove")
-		err := jobs.CheckConfig(cfgFile, removeFlag)
+
+		configPath := cfgFile
+		if configPath == "" {
+			configDir, err := utils.GetDataDir()
+			if err != nil {
+				log.Fatalf("Failed to get config directory: %v", err)
+			}
+			configPath = filepath.Join(configDir, ".cent.yaml")
+		}
+
+		err := jobs.CheckConfig(configPath, removeFlag)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -40,5 +52,4 @@ func init() {
 	rootCmd.AddCommand(checkCmd)
 
 	checkCmd.Flags().BoolP("remove", "r", false, "Remove from .cent.yaml urls that are no longer accessible or are currently private")
-
 }

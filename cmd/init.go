@@ -19,8 +19,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/xm1k3/cent/internal/utils"
 )
@@ -29,16 +30,26 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Cent init configuration file",
-	Long:  "This command will automatically download .cent.yaml from repo and copy it to $HOME/.cent.yaml",
+	Long:  "This command will automatically download .cent.yaml from repo and copy it to .config/cent/.cent.yaml",
 	Run: func(cmd *cobra.Command, args []string) {
 		var fileUrl string
 		linkFlag, _ := cmd.Flags().GetString("url")
-		home, _ := homedir.Dir()
 		overwrite, _ := cmd.Flags().GetBool("overwrite")
 
-		if _, err := os.Stat(home + "/.cent.yaml"); !os.IsNotExist(err) {
+		configDir, err := utils.GetDataDir()
+		if err != nil {
+			log.Fatalf("Failed to get config directory: %v", err)
+		}
+
+		if err := os.MkdirAll(configDir, 0755); err != nil {
+			log.Fatalf("Failed to create config directory %s: %v", configDir, err)
+		}
+
+		configFilePath := filepath.Join(configDir, ".cent.yaml")
+
+		if _, err := os.Stat(configFilePath); !os.IsNotExist(err) {
 			if !overwrite {
-				log.Fatal("Cent config file already exists, if you want to overwrite it use the --overwrite flag ")
+				log.Fatal("Cent config file already exists, if you want to overwrite it use the --overwrite flag")
 			}
 		}
 
@@ -47,19 +58,49 @@ var initCmd = &cobra.Command{
 		} else {
 			fileUrl = linkFlag
 		}
-		err := utils.DownloadFile(home+"/.cent.yaml", fileUrl)
+
+		err = utils.DownloadFile(configFilePath, fileUrl)
 		if err != nil {
-			panic(err)
+			log.Fatalf("Failed to download config file: %v", err)
 		}
+
+		fmt.Printf("Cent configured correctly, you can find the configuration file here: %s\n", configFilePath)
+	},
+}
+
+var initCheckCmd = &cobra.Command{
+	Use:   "check",
+	Short: "Check if .cent.yaml configuration file exists",
+	Long:  "Check if the .cent.yaml configuration file exists in the config directory",
+	Run: func(cmd *cobra.Command, args []string) {
+		configDir, err := utils.GetDataDir()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to get config directory: %v", err)
 		}
-		fmt.Println("cent configured correctly, you can find the configuration file here: " + home + "/.cent.yaml")
+
+		configFilePath := filepath.Join(configDir, ".cent.yaml")
+
+		if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
+			fmt.Printf(color.RedString("Configuration file not found at: %s\n"), configFilePath)
+			fmt.Printf(color.YellowString("Run 'cent init' to download the configuration file\n"))
+			os.Exit(1)
+		} else if err != nil {
+			fmt.Printf(color.RedString("Error checking configuration file: %v\n"), err)
+			os.Exit(1)
+		} else {
+			fmt.Printf(color.GreenString("Configuration file found at: %s\n"), configFilePath)
+
+			if fileInfo, err := os.Stat(configFilePath); err == nil {
+				fmt.Printf(color.CyanString("File size: %d bytes\n"), fileInfo.Size())
+				fmt.Printf(color.CyanString("Last modified: %s\n"), fileInfo.ModTime().Format("2006-01-02 15:04:05"))
+			}
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+	initCmd.AddCommand(initCheckCmd)
 
 	initCmd.Flags().StringP("url", "u", "", "Url from which you can download the configurations for .cent.yaml")
 	initCmd.Flags().BoolP("overwrite", "o", false, "If the cent file exists overwrite it")
