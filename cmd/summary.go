@@ -27,7 +27,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/table"
 	"github.com/spf13/cobra"
-	"github.com/xm1k3/cent/internal/utils"
+	"github.com/xm1k3/cent/v2/internal/utils"
 	"gopkg.in/yaml.v2"
 )
 

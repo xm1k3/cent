@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/fatih/color"
-	"github.com/xm1k3/cent/internal/utils"
+	"github.com/xm1k3/cent/v2/internal/utils"
 	"gopkg.in/yaml.v3"
 )
 
