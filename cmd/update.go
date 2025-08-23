@@ -23,8 +23,8 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"github.com/xm1k3/cent/internal/utils"
-	"github.com/xm1k3/cent/pkg/jobs"
+	"github.com/xm1k3/cent/v2/internal/utils"
+	"github.com/xm1k3/cent/v2/pkg/jobs"
 )
 
 // updateCmd represents the update command

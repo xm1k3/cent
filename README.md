@@ -18,7 +18,7 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 
 # Install
 ```
-go install -v github.com/xm1k3/cent@latest
+go install -v github.com/xm1k3/cent/v2@latest
 ```
 
 Or [download from releases](https://github.com/xm1k3/cent/releases)
