@@ -57,6 +57,7 @@ By xm1k3`,
 		threads, _ := cmd.Flags().GetInt("threads")
 		timeout, _ := cmd.Flags().GetInt("timeout")
 		keepFolders, _ := cmd.Flags().GetBool("keep-folders")
+		byRepo, _ := cmd.Flags().GetBool("by-repo")
 
 		configDir, err := utils.GetDataDir()
 		if err != nil {
@@ -75,7 +76,7 @@ By xm1k3`,
 
 		fmt.Println(color.CyanString("cent started"))
 
-		jobs.Start(pathFlag, console, threads, timeout, keepFolders)
+		jobs.Start(pathFlag, console, threads, timeout, keepFolders, byRepo)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
 		if !keepFolders {
@@ -103,7 +104,8 @@ func init() {
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
 	rootCmd.Flags().IntP("threads", "t", 10, "Number of threads to use when cloning repositories")
 	rootCmd.Flags().IntP("timeout", "T", 2, "timeout in minutes for each git clone")
-	rootCmd.Flags().BoolP("keep-folders", "k", false, "Keep templates organized in folders by repo name")
+	rootCmd.Flags().BoolP("keep-folders", "k", false, "Keep templates organized in folders by category")
+	rootCmd.Flags().BoolP("by-repo", "r", false, "Group templates by repository (use with -k)")
 
 	rootCmd.MarkFlagRequired("name")
 }
