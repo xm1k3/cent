@@ -12,8 +12,6 @@ Community edition nuclei templates, a simple tool that allows you to organize al
 <a href="https://twitter.com/xm1k3_"><img src="https://img.shields.io/twitter/follow/xm1k3_.svg?logo=twitter"></a>
 <br>
 <br>
-<br>
-<a href="https://www.buymeacoffee.com/xm1k3"><img src="https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png"></a>
 </p>
 
 # Install
@@ -43,8 +41,9 @@ after installation run `cent init` to initialize cent with the configuration fil
 ```
 Flags:
       --config string   config file (default is .config/cent/.cent.yaml)
+  -r, --by-repo         Group templates by repository (use with -k)
   -C, --console         Print console output
-  -k, --keep-folders    Keep templates organized in folders by repo name
+  -k, --keep-folders    Keep templates organized in folders by category
   -p, --path string     Root path to save the templates (default "cent-nuclei-templates")
   -t, --threads int     Number of threads to use when cloning repositories (default 10)
   -T, --timeout int     Timeout in minutes for each git clone (default 2)
@@ -88,20 +87,39 @@ cent started
 cent finished, you can find all your nuclei-templates in cent-nuclei-templates
 ```
 
-### Keep templates organized by repo
-Use the `-k` flag to keep templates in separate folders named after the source repository:
+### Keep templates organized by category
+Use the `-k` flag to keep the internal folder structure of each repository:
 ```
 cent -p cent-nuclei-templates -k
 ```
 This will create a folder structure like:
 ```
 cent-nuclei-templates/
+  cves/
+    CVE-2021-1234.yaml
+  vulnerabilities/
+    template.yaml
+  others/
+    uncategorized-template.yaml
+```
+
+Templates without a subfolder in their source repo are placed in `others/`.
+
+### Group templates by repository
+Use `-k -r` to also group templates by their source repository:
+```
+cent -p cent-nuclei-templates -k -r
+```
+```
+cent-nuclei-templates/
   projectdiscovery/nuclei-templates/
-    cve-2021-1234.yaml
-    ...
+    cves/
+      CVE-2021-1234.yaml
+    vulnerabilities/
+      template.yaml
   user/repo-name/
-    custom-template.yaml
-    ...
+    others/
+      custom-template.yaml
 ```
 
 ## Summary Command
@@ -275,13 +293,23 @@ exclude-files:
   - .pre-commit-config.yaml
   - LICENSE
 
-# Add github urls
+# Add github urls (simple format)
 community-templates:
   - https://github.com/projectdiscovery/nuclei-templates
-  ...
-  ...
+  - https://github.com/other/repo
 
+  # Extended format: pin a repo to a specific commit
+  - url: https://github.com/user/repo
+    commit: abc123f
+
+  # Extended format: per-repo exclude
+  - url: https://github.com/user/repo2
+    exclude:
+      - "workflows/"
+      - "fuzzing/"
 ```
+
+Both formats can be mixed in the same config file. When `commit` is specified, cent will clone the full repo and checkout that specific commit instead of using a shallow clone. Per-repo `exclude` filters out matching paths from that specific repository.
 
 ## Credits
 - [hakluke](https://twitter.com/hakluke)
