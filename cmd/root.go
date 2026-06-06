@@ -102,7 +102,7 @@ func init() {
 	rootCmd.Flags().StringP("path", "p", "cent-nuclei-templates", "Root path to save the templates")
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
 	rootCmd.Flags().IntP("threads", "t", 10, "Number of threads to use when cloning repositories")
-	rootCmd.Flags().IntP("timeout", "T", 2, "timeout in seconds")
+	rootCmd.Flags().IntP("timeout", "T", 2, "timeout in minutes for each git clone")
 	rootCmd.Flags().BoolP("keep-folders", "k", false, "Keep templates organized in folders by repo name")
 
 	rootCmd.MarkFlagRequired("name")

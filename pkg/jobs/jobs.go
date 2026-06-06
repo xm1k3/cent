@@ -21,14 +21,14 @@ import (
 	"github.com/xm1k3/cent/v2/internal/utils"
 )
 
-func cloneRepo(gitPath string, console bool, index string, timestamp string) error {
+func cloneRepo(gitPath string, console bool, index string, timestamp string, timeoutMinutes int) error {
 	destDir := filepath.Join(os.TempDir(), fmt.Sprintf("cent%s/repo%s", timestamp, index))
 
 	if err := os.MkdirAll(destDir, 0700); err != nil {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
 
-	timeout := 60 * time.Second
+	timeout := time.Duration(timeoutMinutes) * time.Minute
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -53,10 +53,10 @@ func cloneRepo(gitPath string, console bool, index string, timestamp string) err
 	return nil
 }
 
-func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, defaultTimeout int) {
+func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, timeoutMinutes int) {
 	defer wg.Done()
 	for repo := range work {
-		err := cloneRepo(repo[1], console, repo[0], timestamp)
+		err := cloneRepo(repo[1], console, repo[0], timestamp, timeoutMinutes)
 		if err != nil {
 			fmt.Println(color.RedString("[ERR] clone: " + repo[1] + " - " + err.Error()))
 		}

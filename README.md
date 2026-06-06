@@ -47,6 +47,7 @@ Flags:
   -k, --keep-folders    Keep templates organized in folders by repo name
   -p, --path string     Root path to save the templates (default "cent-nuclei-templates")
   -t, --threads int     Number of threads to use when cloning repositories (default 10)
+  -T, --timeout int     Timeout in minutes for each git clone (default 2)
 ```
 
 
