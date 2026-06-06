@@ -8,14 +8,27 @@ import (
 	"sync"
 
 	"github.com/fatih/color"
-	"github.com/xm1k3/cent/v2/internal/utils"
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	ExcludeDirs        []string `yaml:"exclude-dirs"`
-	ExcludeFiles       []string `yaml:"exclude-files"`
-	CommunityTemplates []string `yaml:"community-templates"`
+	ExcludeDirs        []string    `yaml:"exclude-dirs"`
+	ExcludeFiles       []string    `yaml:"exclude-files"`
+	CommunityTemplates []yaml.Node `yaml:"community-templates"`
+}
+
+func configEntryURL(node yaml.Node) string {
+	if node.Kind == yaml.ScalarNode {
+		return node.Value
+	}
+	if node.Kind == yaml.MappingNode {
+		for i := 0; i < len(node.Content)-1; i += 2 {
+			if node.Content[i].Value == "url" {
+				return node.Content[i+1].Value
+			}
+		}
+	}
+	return ""
 }
 
 func CheckConfig(configPath string, removeFlag bool) error {
@@ -32,7 +45,12 @@ func CheckConfig(configPath string, removeFlag bool) error {
 
 	var wg sync.WaitGroup
 
-	for _, url := range config.CommunityTemplates {
+	for _, node := range config.CommunityTemplates {
+		url := configEntryURL(node)
+		if url == "" {
+			continue
+		}
+
 		if removeFlag && strings.Contains(url, "gist.github.com") {
 			fmt.Println(color.YellowString("[INFO] Ignoring and removing gist.github.com URL: %s", url))
 			RemoveURLFromConfig(configPath, url)
@@ -81,10 +99,17 @@ func RemoveURLFromConfig(configPath, url string) error {
 		return err
 	}
 
+	var filtered []yaml.Node
+	for _, node := range config.CommunityTemplates {
+		if configEntryURL(node) != url {
+			filtered = append(filtered, node)
+		}
+	}
+
 	updatedConfig := Config{
 		ExcludeDirs:        config.ExcludeDirs,
 		ExcludeFiles:       config.ExcludeFiles,
-		CommunityTemplates: utils.RemoveStringFromSlice(config.CommunityTemplates, url),
+		CommunityTemplates: filtered,
 	}
 
 	updatedYAML, err := yaml.Marshal(&updatedConfig)

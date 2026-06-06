@@ -21,7 +21,46 @@ import (
 	"github.com/xm1k3/cent/v2/internal/utils"
 )
 
-func cloneRepo(gitPath string, console bool, index string, timestamp string, timeoutMinutes int) error {
+type RepoEntry struct {
+	URL     string   `yaml:"url"`
+	Commit  string   `yaml:"commit,omitempty"`
+	Exclude []string `yaml:"exclude,omitempty"`
+}
+
+func ParseRepoEntries() []RepoEntry {
+	raw := viper.Get("community-templates")
+	items, ok := raw.([]interface{})
+	if !ok {
+		return nil
+	}
+
+	var entries []RepoEntry
+	for _, item := range items {
+		switch v := item.(type) {
+		case string:
+			entries = append(entries, RepoEntry{URL: v})
+		case map[string]interface{}:
+			entry := RepoEntry{}
+			if u, ok := v["url"].(string); ok {
+				entry.URL = u
+			}
+			if c, ok := v["commit"].(string); ok {
+				entry.Commit = c
+			}
+			if e, ok := v["exclude"].([]interface{}); ok {
+				for _, ex := range e {
+					if s, ok := ex.(string); ok {
+						entry.Exclude = append(entry.Exclude, s)
+					}
+				}
+			}
+			entries = append(entries, entry)
+		}
+	}
+	return entries
+}
+
+func cloneRepo(entry RepoEntry, console bool, index string, timestamp string, timeoutMinutes int) error {
 	destDir := filepath.Join(os.TempDir(), fmt.Sprintf("cent%s/repo%s", timestamp, index))
 
 	if err := os.MkdirAll(destDir, 0700); err != nil {
@@ -32,7 +71,13 @@ func cloneRepo(gitPath string, console bool, index string, timestamp string, tim
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, "git", "clone", "--depth", "1", "--single-branch", "--no-tags", "--no-recurse-submodules", gitPath, destDir)
+	cloneArgs := []string{"clone", "--single-branch", "--no-tags", "--no-recurse-submodules"}
+	if entry.Commit == "" {
+		cloneArgs = append(cloneArgs, "--depth", "1")
+	}
+	cloneArgs = append(cloneArgs, entry.URL, destDir)
+
+	cmd := exec.CommandContext(ctx, "git", cloneArgs...)
 
 	if console {
 		cmd.Stdout = os.Stdout
@@ -43,22 +88,39 @@ func cloneRepo(gitPath string, console bool, index string, timestamp string, tim
 
 	err := cmd.Run()
 	if ctx.Err() == context.DeadlineExceeded {
-		return fmt.Errorf("git clone timed out for %s", gitPath)
+		return fmt.Errorf("git clone timed out for %s", entry.URL)
 	}
 	if err != nil {
-		return fmt.Errorf("git clone failed for %s: %w", gitPath, err)
+		return fmt.Errorf("git clone failed for %s: %w", entry.URL, err)
 	}
 
-	fmt.Printf(color.GreenString("[CLONED] %s\n", gitPath))
+	if entry.Commit != "" {
+		cmdCheckout := exec.CommandContext(ctx, "git", "-C", destDir, "checkout", entry.Commit)
+		if console {
+			cmdCheckout.Stdout = os.Stdout
+			cmdCheckout.Stderr = os.Stderr
+		}
+		if err := cmdCheckout.Run(); err != nil {
+			return fmt.Errorf("git checkout %s failed for %s: %w", entry.Commit, entry.URL, err)
+		}
+		fmt.Printf(color.GreenString("[CLONED] %s @ %s\n", entry.URL, entry.Commit))
+	} else {
+		fmt.Printf(color.GreenString("[CLONED] %s\n", entry.URL))
+	}
 	return nil
 }
 
-func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, timeoutMinutes int) {
+type repoWork struct {
+	index string
+	entry RepoEntry
+}
+
+func worker(work chan repoWork, wg *sync.WaitGroup, console bool, timestamp string, timeoutMinutes int) {
 	defer wg.Done()
 	for repo := range work {
-		err := cloneRepo(repo[1], console, repo[0], timestamp, timeoutMinutes)
+		err := cloneRepo(repo.entry, console, repo.index, timestamp, timeoutMinutes)
 		if err != nil {
-			fmt.Println(color.RedString("[ERR] clone: " + repo[1] + " - " + err.Error()))
+			fmt.Println(color.RedString("[ERR] clone: " + repo.entry.URL + " - " + err.Error()))
 		}
 	}
 }
@@ -76,7 +138,7 @@ func repoNameFromURL(url string) string {
 	return url
 }
 
-func Start(_path string, console bool, threads int, defaultTimeout int, keepFolders bool) {
+func Start(_path string, console bool, threads int, defaultTimeout int, keepFolders bool, byRepo bool) {
 	timestamp := strconv.Itoa(int(time.Now().Unix()))
 	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(_path), 0700)
@@ -86,16 +148,21 @@ func Start(_path string, console bool, threads int, defaultTimeout int, keepFold
 		log.Fatalf("Git is not installed or not available in PATH: %v", err)
 	}
 
-	templates := viper.GetStringSlice("community-templates")
+	entries := ParseRepoEntries()
 	repoNames := make(map[string]string)
-	for index, gitPath := range templates {
-		repoNames[strconv.Itoa(index)] = repoNameFromURL(gitPath)
+	repoExcludes := make(map[string][]string)
+	for index, entry := range entries {
+		idx := strconv.Itoa(index)
+		repoNames[idx] = repoNameFromURL(entry.URL)
+		if len(entry.Exclude) > 0 {
+			repoExcludes[idx] = entry.Exclude
+		}
 	}
 
-	work := make(chan [2]string)
+	work := make(chan repoWork)
 	go func() {
-		for index, gitPath := range templates {
-			work <- [2]string{strconv.Itoa(index), gitPath}
+		for index, entry := range entries {
+			work <- repoWork{index: strconv.Itoa(index), entry: entry}
 		}
 		close(work)
 	}()
@@ -119,25 +186,44 @@ func Start(_path string, console bool, threads int, defaultTimeout int, keepFold
 			return nil
 		}
 
-		basename := info.Name()
-		if filepath.Ext(basename) == ".yaml" {
-			var destinationPath string
-			if keepFolders {
-				relPath := strings.TrimPrefix(path, dirname+string(os.PathSeparator))
-				parts := strings.SplitN(relPath, string(os.PathSeparator), 2)
-				repoDir := parts[0]
-				idx := strings.TrimPrefix(repoDir, "repo")
-				repoName := repoNames[idx]
-				destinationPath = filepath.Join(_path, repoName, basename)
-				os.MkdirAll(filepath.Dir(destinationPath), 0700)
-			} else {
-				destinationPath = filepath.Join(_path, basename)
-			}
+		relPath := strings.TrimPrefix(path, dirname+string(os.PathSeparator))
+		parts := strings.SplitN(relPath, string(os.PathSeparator), 2)
+		repoDir := parts[0]
+		idx := strings.TrimPrefix(repoDir, "repo")
 
-			err := utils.CopyFile(path, destinationPath)
-			if err != nil {
-				return err
+		if excludes, ok := repoExcludes[idx]; ok {
+			for _, ex := range excludes {
+				if strings.Contains(relPath, ex) {
+					return nil
+				}
 			}
+		}
+
+		if filepath.Ext(info.Name()) != ".yaml" {
+			return nil
+		}
+
+		var destinationPath string
+		if keepFolders {
+			innerPath := ""
+			if len(parts) > 1 {
+				innerPath = parts[1]
+			}
+			if !strings.Contains(innerPath, string(os.PathSeparator)) {
+				innerPath = filepath.Join("others", innerPath)
+			}
+			if byRepo {
+				repoName := repoNames[idx]
+				innerPath = filepath.Join(repoName, innerPath)
+			}
+			destinationPath = filepath.Join(_path, innerPath)
+			os.MkdirAll(filepath.Dir(destinationPath), 0700)
+		} else {
+			destinationPath = filepath.Join(_path, info.Name())
+		}
+
+		if cpErr := utils.CopyFile(path, destinationPath); cpErr != nil {
+			return cpErr
 		}
 
 		return nil
