@@ -1,20 +1,11 @@
-# Directories to exclude
 exclude-dirs:
   - SOMETHING
-
-# Files to exclude
 exclude-files:
   - README.md
   - .gitignore
   - .pre-commit-config.yaml
   - LICENSE
-
-# Add github urls
 community-templates:
-  - https://gist.github.com/0x240x23elu
-  - https://gist.github.com/ResistanceIsUseless/e46848f67706a8aa1205c9d2866bff31
-  - https://github.com/0x727/ObserverWard
-  - https://github.com/0x727/ObserverWard_0x727
   - https://github.com/0xAwali/Blind-SSRF
   - https://github.com/0xAwali/Virtual-Host
   - https://github.com/0xKayala/Custom-Nuclei-Templates
@@ -32,7 +23,6 @@ community-templates:
   - https://github.com/0xSojalSec/templatesallnuclei
   - https://github.com/0xSojalSec/templates-nuclei-Oracle-OAM---XSS
   - https://github.com/1in9e/my-nuclei-templates
-  - https://github.com/5cr1pt/templates
   - https://github.com/adampielak/nuclei-templates
   - https://github.com/aels/CVE-2022-37042
   - https://github.com/Akokonunes/Private-Nuclei-Templates
@@ -87,14 +77,11 @@ community-templates:
   - https://github.com/KeepHowling/all_freaking_nuclei_templates
   - https://github.com/kh4sh3i/CVE-2022-23131
   - https://github.com/kh4sh3i/nuclei-templates
-  - https://github.com/Linuxinet/mobile-nuclei-templates
   - https://github.com/Lopseg/nuclei-c-templates
   - https://github.com/Lu3ky13/Authorization-Nuclei-Templates
   - https://github.com/luck-ying/Library-YAML-POC
   - https://github.com/mastersir-lab/nuclei-yaml-poc
-  - https://github.com/mbskter/Masscan2Httpx2Nuclei-Xray
   - https://github.com/medbsq/ncl
-  - https://github.com/meme-lord/Custom-Nuclei-Templates
   - https://github.com/microphone-mathematics/custom-nuclei-templates
   - https://github.com/mosesrenegade/nuclei-templates
   - https://github.com/MR-pentestGuy/nuclei-templates
@@ -107,8 +94,6 @@ community-templates:
   - https://github.com/Odayex/Random-Nuclei-Templates
   - https://github.com/optiv/mobile-nuclei-templates
   - https://github.com/panch0r3d/nuclei-templates
-  - https://github.com/pdelteil/BugBountyReportTemplates
-  - https://github.com/peanuth8r/Nuclei_Templates
   - https://github.com/PedroF-369/nuclei_templates
   - https://github.com/PedroFerreira97/nuclei_templates
   - https://github.com/pikpikcu/my-nuclei-templates
@@ -126,7 +111,6 @@ community-templates:
   - https://github.com/RandomRobbieBF/nuclei-drupal-sa
   - https://github.com/randomstr1ng/nuclei-sap-templates
   - https://github.com/Red-Darkin/Custom-Nuclei-Templates
-  - https://github.com/redteambrasil/nuclei-templates
   - https://github.com/ree4pwn/my-nuclei-templates
   - https://github.com/reewardius/log4shell-templates
   - https://github.com/ricardomaia/nuclei-template-generator-for-wordpress-plugins
@@ -169,7 +153,6 @@ community-templates:
   - https://github.com/vulnspace/nuclei-templates
   - https://github.com/wasp76b/nuclei-templates
   - https://github.com/wearetyomsmnv/llm_integrated_nuclei_templates
-  - https://github.com/wr00t/templates
   - https://github.com/xinZa1/template
   - https://github.com/yarovit-developer/nuclei-templates
   - https://github.com/yavolo/nuclei-templates
