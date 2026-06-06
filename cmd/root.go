@@ -56,6 +56,7 @@ By xm1k3`,
 		console, _ := cmd.Flags().GetBool("console")
 		threads, _ := cmd.Flags().GetInt("threads")
 		timeout, _ := cmd.Flags().GetInt("timeout")
+		keepFolders, _ := cmd.Flags().GetBool("keep-folders")
 
 		configDir, err := utils.GetDataDir()
 		if err != nil {
@@ -74,11 +75,13 @@ By xm1k3`,
 
 		fmt.Println(color.CyanString("cent started"))
 
-		jobs.Start(pathFlag, console, threads, timeout)
+		jobs.Start(pathFlag, console, threads, timeout, keepFolders)
 		jobs.RemoveEmptyFolders(path.Join(pathFlag))
 		jobs.UpdateRepo(path.Join(pathFlag), true, true, false)
-		jobs.RemoveDuplicates(path.Join(pathFlag), console)
-		fmt.Println(color.YellowString("[!] Removed duplicates"))
+		if !keepFolders {
+			jobs.RemoveDuplicates(path.Join(pathFlag), console)
+			fmt.Println(color.YellowString("[!] Removed duplicates"))
+		}
 		fmt.Println(color.CyanString("cent finished, you can find all your nuclei-templates in " + pathFlag))
 	},
 }
@@ -100,6 +103,7 @@ func init() {
 	rootCmd.Flags().BoolP("console", "C", false, "Print console output")
 	rootCmd.Flags().IntP("threads", "t", 10, "Number of threads to use when cloning repositories")
 	rootCmd.Flags().IntP("timeout", "T", 2, "timeout in seconds")
+	rootCmd.Flags().BoolP("keep-folders", "k", false, "Keep templates organized in folders by repo name")
 
 	rootCmd.MarkFlagRequired("name")
 }
