@@ -44,8 +44,10 @@ after installation run `cent init` to initialize cent with the configuration fil
 Flags:
       --config string   config file (default is .config/cent/.cent.yaml)
   -C, --console         Print console output
+  -k, --keep-folders    Keep templates organized in folders by repo name
   -p, --path string     Root path to save the templates (default "cent-nuclei-templates")
   -t, --threads int     Number of threads to use when cloning repositories (default 10)
+  -T, --timeout int     Timeout in minutes for each git clone (default 2)
 ```
 
 
@@ -84,6 +86,22 @@ cent started
 ... 
 ...
 cent finished, you can find all your nuclei-templates in cent-nuclei-templates
+```
+
+### Keep templates organized by repo
+Use the `-k` flag to keep templates in separate folders named after the source repository:
+```
+cent -p cent-nuclei-templates -k
+```
+This will create a folder structure like:
+```
+cent-nuclei-templates/
+  projectdiscovery/nuclei-templates/
+    cve-2021-1234.yaml
+    ...
+  user/repo-name/
+    custom-template.yaml
+    ...
 ```
 
 ## Summary Command

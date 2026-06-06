@@ -21,14 +21,14 @@ import (
 	"github.com/xm1k3/cent/v2/internal/utils"
 )
 
-func cloneRepo(gitPath string, console bool, index string, timestamp string) error {
+func cloneRepo(gitPath string, console bool, index string, timestamp string, timeoutMinutes int) error {
 	destDir := filepath.Join(os.TempDir(), fmt.Sprintf("cent%s/repo%s", timestamp, index))
 
 	if err := os.MkdirAll(destDir, 0700); err != nil {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
 
-	timeout := 60 * time.Second
+	timeout := time.Duration(timeoutMinutes) * time.Minute
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -53,17 +53,30 @@ func cloneRepo(gitPath string, console bool, index string, timestamp string) err
 	return nil
 }
 
-func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, defaultTimeout int) {
+func worker(work chan [2]string, wg *sync.WaitGroup, console bool, timestamp string, timeoutMinutes int) {
 	defer wg.Done()
 	for repo := range work {
-		err := cloneRepo(repo[1], console, repo[0], timestamp)
+		err := cloneRepo(repo[1], console, repo[0], timestamp, timeoutMinutes)
 		if err != nil {
 			fmt.Println(color.RedString("[ERR] clone: " + repo[1] + " - " + err.Error()))
 		}
 	}
 }
 
-func Start(_path string, console bool, threads int, defaultTimeout int) {
+func repoNameFromURL(url string) string {
+	url = strings.TrimSuffix(url, ".git")
+	url = strings.TrimSuffix(url, "/")
+	parts := strings.Split(url, "/")
+	if len(parts) >= 2 {
+		return parts[len(parts)-2] + "/" + parts[len(parts)-1]
+	}
+	if len(parts) == 1 {
+		return parts[0]
+	}
+	return url
+}
+
+func Start(_path string, console bool, threads int, defaultTimeout int, keepFolders bool) {
 	timestamp := strconv.Itoa(int(time.Now().Unix()))
 	if _, err := os.Stat(filepath.Join(_path)); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(_path), 0700)
@@ -73,9 +86,15 @@ func Start(_path string, console bool, threads int, defaultTimeout int) {
 		log.Fatalf("Git is not installed or not available in PATH: %v", err)
 	}
 
+	templates := viper.GetStringSlice("community-templates")
+	repoNames := make(map[string]string)
+	for index, gitPath := range templates {
+		repoNames[strconv.Itoa(index)] = repoNameFromURL(gitPath)
+	}
+
 	work := make(chan [2]string)
 	go func() {
-		for index, gitPath := range viper.GetStringSlice("community-templates") {
+		for index, gitPath := range templates {
 			work <- [2]string{strconv.Itoa(index), gitPath}
 		}
 		close(work)
@@ -96,20 +115,28 @@ func Start(_path string, console bool, threads int, defaultTimeout int) {
 			return err
 		}
 
-		directory := getDirPath(strings.TrimPrefix(path, dirname))
-
 		if info.IsDir() {
-		} else {
-			basename := info.Name()
-			if filepath.Ext(basename) == ".yaml" {
-				directory = ""
-				sourcePath := path
-				destinationPath := filepath.Join(_path, directory, basename)
+			return nil
+		}
 
-				err := utils.CopyFile(sourcePath, destinationPath)
-				if err != nil {
-					return err
-				}
+		basename := info.Name()
+		if filepath.Ext(basename) == ".yaml" {
+			var destinationPath string
+			if keepFolders {
+				relPath := strings.TrimPrefix(path, dirname+string(os.PathSeparator))
+				parts := strings.SplitN(relPath, string(os.PathSeparator), 2)
+				repoDir := parts[0]
+				idx := strings.TrimPrefix(repoDir, "repo")
+				repoName := repoNames[idx]
+				destinationPath = filepath.Join(_path, repoName, basename)
+				os.MkdirAll(filepath.Dir(destinationPath), 0700)
+			} else {
+				destinationPath = filepath.Join(_path, basename)
+			}
+
+			err := utils.CopyFile(path, destinationPath)
+			if err != nil {
+				return err
 			}
 		}
 
